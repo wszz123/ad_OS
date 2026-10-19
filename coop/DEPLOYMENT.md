@@ -35,6 +35,42 @@ python -m pip install -r requirements.txt --proxy http://127.0.0.1:1081
 cuda:0/cuda:1；若单卡有足够显存，也可共卡；RAM充分时可令embedding使用CPU。
 Qwen3-Embedding-4B在CPU速度较慢。报告分别记录权重dtype、向量输出float32和状态传输float16。
 
+## 浏览器展示界面
+
+前端是本地HTML/CSS/JavaScript，无需npm、Node、CDN或额外Web框架。启动Web UI与本地API：
+
+```bash
+python -m tools.serve_ui --backend fixture --host 127.0.0.1 --port 8765
+```
+
+浏览器打开 `http://127.0.0.1:8765`。真实Qwen模式：
+
+```bash
+python -m tools.serve_ui --backend qwen --device cuda:1 --embedding-device cpu --port 8765
+```
+
+页面也可从fixture切换到qwen，此时会加载本地模型，加载完成前请勿重复切换。
+默认只监听loopback，是单用户本机演示，不含登录/鉴权，也不应直接暴露到公网。
+目前HTTP请求在服务器工作线程中串行执行，避免共享模型和生成调用统计并发串扰。
+
+### 三个展示区
+
+1. **左栏：预设任务**。显示Orion/Lyra十个有标准标签的任务；切换text/protocol并一键运行。
+2. **中栏：对话窗口**。以用户消息、Agent身份和Summarizer回答呈现；支持输入手动任务。
+   手动任务当前从文本推断Orion/Lyra，并使用固定演示输入组合。
+3. **右栏：赛题指标**。展示四角色状态、协议frame、LLM调用/token、float16状态大小、
+   记忆复用、任务内金额/单位/引用一致性检查和要求覆盖状态。
+
+质量状态是计算结果与工具/实际来源的一致性检查，不是独立隐藏标签准确率。
+界面展示单次运行，不冒充双trial科学评测。fixture使用脚本planner/二维示意向量，
+不能把其token计数当Qwen tokenizer结果或真实模型性能数据。
+
+本地API：`GET /api/health`、`GET /api/presets`、`POST /api/engine`、`POST /api/run`。
+`POST /api/run`可传预设`task_id`，或传`query/entity/inputs/mode/use_vector`，同步返回运行和trace。
+服务为本地单用户原型，进程重启后运行历史及fixture内存会清空。
+
+前端及本地HTTP API测试包含在`python -m unittest discover -s tests -v`中；资源位于`web/`。
+
 ## 环境诊断
 
 ```bash

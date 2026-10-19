@@ -102,8 +102,9 @@ def package_source(output, *, include_reports=False):
     for name in ("README.md", "LICENSE", "AGENTS.md", "proj_requir.md", "requirements.txt",
                  "__init__.py", "run.py", "data.py", "models.py", "prompts.py", "utils.py"):
         files.add(ROOT / name)
-    for folder in ("coop", "tools", "tests", "methods"):
-        files.update(path for path in (ROOT / folder).rglob("*") if path.suffix in (".py", ".md", ".txt"))
+    for folder in ("coop", "tools", "tests", "methods", "web"):
+        files.update(path for path in (ROOT / folder).rglob("*")
+                     if path.suffix in (".py", ".md", ".txt", ".html", ".css", ".js"))
     for folder in ("data",):
         files.update(path for path in (ROOT / folder).rglob("*") if path.suffix in (".json", ".jsonl"))
     if include_reports:
@@ -146,8 +147,16 @@ def main():
     summarize.add_argument("--report", action="append")
     summarize.add_argument("--output", default="results/evidence_summary")
     pack = commands.add_parser("package", help="Build a source/docs ZIP with per-file SHA256 manifest")
-    pack.add_argument("--output", default="results/latentmas-prototype-" + uuid4().hex[:8] + ".zip")
+    pack.add_argument("--output", default="results/competition-prototype-" + uuid4().hex[:8] + ".zip")
     pack.add_argument("--include-reports", action="store_true")
+    ui = commands.add_parser("ui", help="Start the local competition demonstration web UI")
+    ui.add_argument("--host", default="127.0.0.1")
+    ui.add_argument("--port", type=int, default=8765)
+    ui.add_argument("--backend", choices=("fixture", "qwen"), default="fixture")
+    ui.add_argument("--device", default="cuda:1")
+    ui.add_argument("--embedding-device", default="cpu")
+    ui.add_argument("--model-path", default=QWEN)
+    ui.add_argument("--embedding-path", default=EMBEDDING)
     args = parser.parse_args()
     if args.command == "doctor":
         result = environment_report(backend=args.backend, model_path=args.model_path, embedding_path=args.embedding_path)
@@ -163,8 +172,15 @@ def main():
         result = collect_reports(paths)
         write_summary(result, args.output)
         print(json.dumps({"reports": len(result["reports"]), "skipped": len(result["skipped"]), "output": args.output}))
-    else:
+    elif args.command == "package":
         print(json.dumps(package_source(args.output, include_reports=args.include_reports), ensure_ascii=False, indent=2))
+    else:
+        if not 1 <= args.port <= 65535:
+            parser.error("port must be between 1 and 65535")
+        from .web_server import serve, start_engine
+        start_engine(args.backend, args.device, args.embedding_device,
+                     model_path=args.model_path, embedding_path=args.embedding_path)
+        serve(args.host, args.port)
 
 
 if __name__ == "__main__":

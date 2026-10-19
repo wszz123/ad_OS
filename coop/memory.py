@@ -53,7 +53,8 @@ class MemoryAdapter:
     """SQLite-backed memory collection; embedding is optional and injected."""
 
     def __init__(self, path: str = ":memory:", embedder: Optional[Embedder] = None,
-                 query_embedder: Optional[Embedder] = None, *, connection=None) -> None:
+                 query_embedder: Optional[Embedder] = None, *, connection=None,
+                 check_same_thread: bool = True) -> None:
         self.path = path
         self.embedder = embedder
         self.query_embedder = query_embedder or embedder
@@ -64,7 +65,8 @@ class MemoryAdapter:
                                "filtered_vector_json_bytes_loaded": 0,
                                "metadata_get_calls": 0, "metadata_get_rows": 0}
         self._owns_connection = connection is None
-        self.connection = connection if connection is not None else sqlite3.connect(path)
+        self.connection = connection if connection is not None else sqlite3.connect(
+            path, check_same_thread=check_same_thread)
         self.connection.row_factory = sqlite3.Row
         self.connection.execute("""
             CREATE TABLE IF NOT EXISTS memories (

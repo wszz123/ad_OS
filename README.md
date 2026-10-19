@@ -40,7 +40,16 @@ Planner ──检索query/state──> Retriever ──facts──> Executor ─
 
 ## 快速开始
 
-要求 Linux、Python 3.10。安装赛题原型独立依赖：
+要求 Linux、Python 3.10。仓库现有的 `latentmas` Conda 环境已经包含本原型所需的
+`numpy`、`torch` 和 `langgraph`，可直接复用：
+
+```bash
+conda activate latentmas
+python --version  # 应为 Python 3.10.x
+python -m pip install -r requirements.txt  # 仅在依赖未安装或版本不一致时执行
+```
+
+如果本机没有 `latentmas` 环境，再创建独立环境：
 
 ```bash
 conda create -n coop-prototype python=3.10 -y
@@ -64,10 +73,24 @@ python -m coop demo --backend fixture
 python -m coop demo --backend qwen --device cuda:1 --embedding-device cpu
 python -m coop summarize --results-dir results --output results/evidence_summary
 python -m unittest discover -s tests -v
+
+# Browser UI with scripted fixture backend (recommended for a quick demo)
+python -m tools.serve_ui --backend fixture --port 8765
+# Then visit http://127.0.0.1:8765
+
+# Optional: load local Qwen models; requires the local model paths above
+python -m tools.serve_ui --backend qwen --device cuda:1 --embedding-device cpu
 ```
+
+浏览器界面启动后，可从左侧运行预设任务或在中间区域提交手动任务；右侧展示
+Agent 状态、协议消息、float16 状态传输、记忆复用和模型调用指标。`fixture` 启动快，
+用于界面和流程演示；`qwen` 才会加载本地模型执行真实推理。停止服务使用 `Ctrl-C`。
 
 `fixture` 用脚本化 planner 和示意向量检查模块连线，**不是LLM推理或通信性能证据**。
 `qwen` 执行四模式真实模型工作流，再分子进程执行状态/纠错恢复。
+项目含无Node/npm依赖的本地Web界面，展示预设任务、手动对话、Agent运行状态、协议消息、
+状态包、记忆命中及赛题指标。界面/API是单用户loopback原型，不含公网鉴权；指标口径与API
+见 `coop/DEPLOYMENT.md`。
 
 ## 四角色多步任务
 

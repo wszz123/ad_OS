@@ -7,6 +7,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 import zipfile
+import shutil
 
 from coop.__main__ import ROOT, package_source, run_step
 from coop.demo_support import environment_report
@@ -43,6 +44,23 @@ class DemoEntrypointTests(unittest.TestCase):
             self.assertEqual(workload["metrics"]["protocol_vector_memory"]["accepted_reuse"], 4)
             self.assertTrue((run_directory / "protocol_vector_memory" / "repair_ledger.sqlite").is_file())
 
+    def test_frontend_assets_are_served_from_local_bundle(self):
+        from coop.web_server import Handler, ThreadingHTTPServer
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        import threading
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            from urllib.request import urlopen
+            for path, content_type in (("/", "text/html"), ("/assets/styles.css", "text/css"),
+                                       ("/assets/app.js", "text/javascript")):
+                with urlopen(f"http://127.0.0.1:{server.server_port}{path}", timeout=10) as response:
+                    self.assertIn(content_type, response.headers.get("Content-Type"))
+                    self.assertGreater(len(response.read()), 100)
+        finally:
+            server.shutdown()
+            server.server_close()
+
     def test_summary_retains_failure_and_skips_unsupported_reports(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory)
@@ -67,6 +85,7 @@ class DemoEntrypointTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "source"
             (root / "coop" / "__pycache__").mkdir(parents=True)
+            shutil.copytree(ROOT / "web", root / "web", dirs_exist_ok=True)
             (root / "results").mkdir()
             (root / "coop" / "entry.py").write_text("print('fixture')\n")
             (root / "coop" / "state.sqlite").write_text("excluded")
@@ -79,6 +98,8 @@ class DemoEntrypointTests(unittest.TestCase):
                 manifest = json.loads(archive.read("PACKAGE_MANIFEST.json"))
                 names = archive.namelist()
                 self.assertIn("coop/entry.py", names)
+                self.assertIn("web/index.html", names)
+                self.assertIn("web/assets/app.js", names)
                 self.assertIn("results/report.json", names)
                 self.assertFalse(any(name.endswith((".sqlite", ".pyc", ".safetensors")) for name in names))
                 for item in manifest["files"]:

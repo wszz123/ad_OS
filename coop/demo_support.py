@@ -3,6 +3,7 @@
 import importlib.metadata
 import json
 from pathlib import Path
+import re
 import platform
 import socket
 import sys
@@ -91,17 +92,23 @@ class FixturePlanner:
             tool = json.loads(content.split("Tool result: ", 1)[1])
             value = {key: tool[key] for key in ("value", "unit", "citations")}
             value["explanation"] = "Scripted summary of the sourced calculator result."
-        else:
-            lines = content.splitlines()
-            entity = next(line.split(": ", 1)[1] for line in lines if line.startswith("Entity: "))
-            question = next(line.split(": ", 1)[1] for line in lines if line.startswith("Task: ")).lower()
+        elif "expression" in messages[0]["content"]:
+            # Public-intent recipe; intentionally not a language model or task-ID lookup.
+            input_match = re.search(r"User inputs: (\{[^\n]*\})", content)
+            entity_match = re.search(r"Entity: ([^\n]+)", content)
+            task_match = re.search(r"Task: ([^\n]+)", content)
+            if not (input_match and entity_match and task_match):
+                raise ValueError("fixture planner could not parse the public task fields")
+            inputs = json.loads(input_match.group(1))
+            entity, question = entity_match.group(1), task_match.group(1).lower()
             capital = "node_count * node_price + network_setup"
             electricity = "node_count * power_watts / 1000 * hours_per_day * days * energy_rate"
             storage = "daily_gb * retention_days * replicas * storage_rate"
             egress = "daily_gb * days * egress_fraction * egress_rate"
             if entity == "Orion":
                 expression = (capital if "exclude recurring" in question else electricity if "electricity cost" in question
-                              else f"{capital} + months * ({electricity} + monthly_maintenance)" if "first-year" in question or "planning-period" in question
+                              else f"{capital} + months * ({electricity} + monthly_maintenance)"
+                              if "first-year" in question or "planning-period" in question
                               else f"{capital} + {electricity} + monthly_maintenance")
             elif entity == "Lyra":
                 expression = (f"months * ({storage} + {egress})" if "annual total" in question or "planning-period" in question
@@ -109,7 +116,14 @@ class FixturePlanner:
                               else storage if "storage cost" in question else egress)
             else:
                 raise ValueError("fixture demo only handles the declared Orion/Lyra schema")
+            catalog_line = next((line.split(": ", 1)[1] for line in content.splitlines()
+                                 if line.startswith("Source variable meanings")), "{}")
+            allowed_names = set(json.loads(catalog_line)) | set(inputs)
+            if not set(re.findall(r"[a-zA-Z_][a-zA-Z_0-9]*", expression)) <= allowed_names:
+                raise ValueError("fixture plan references a variable outside the public schema")
             value = {"search_query": entity + " cost facts", "expression": expression}
+        else:
+            raise ValueError("unsupported fixture planner prompt")
         self.call_stats.append({"prompt_tokens": sum(len(message["content"].split()) for message in messages),
                                 "generated_tokens": len(json.dumps(value).split()), "elapsed_sec": 0.0})
         return {"value": value}

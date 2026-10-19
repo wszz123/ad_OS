@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coop Control Room</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="brand-mark">CM</div>
+        <div>
+          <p class="eyebrow">MULTI-AGENT SYSTEMS LAB</p>
+          <h1>Coop Control Room</h1>
+        </div>
+      </div>
+      <div class="top-status">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-text">fixture engine ready</span>
+        <button class="ghost-button" id="engine-button">Switch runtime</button>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <aside class="left-rail">
+        <section class="panel intro-panel">
+          <div class="section-kicker">01 / RUN PRESETS</div>
+          <h2>预设任务实验</h2>
+          <p class="muted">选择一个可核查任务，观察四角色协作、协议帧、状态包和最终引用。</p>
+          <button class="sequence-button" id="run-sequence">运行10轮预设序列 <span>10 tasks / 2 groups</span></button>
+          <div class="mode-toggle" id="mode-toggle">
+            <button class="mode-button active" data-mode="protocol">Protocol</button>
+            <button class="mode-button" data-mode="text">Text</button>
+          </div>
+        </section>
+        <section class="preset-list" id="preset-list"></section>
+      </aside>
+
+      <section class="conversation-column">
+        <div class="panel conversation-panel">
+          <div class="conversation-header">
+            <div>
+              <div class="section-kicker">02 / MANUAL TASK CONSOLE</div>
+              <h2>任务对话</h2>
+            </div>
+            <div class="conversation-meta"><span class="live-pulse"></span><span id="conversation-mode">Protocol</span></div>
+          </div>
+          <div class="chat-stream" id="chat-stream" aria-live="polite">
+            <div class="empty-chat">
+              <div class="empty-icon">01</div>
+              <h3>开始一次协作任务</h3>
+              <p>从左侧选择预设，或在下方输入一个 Orion / Lyra 任务。</p>
+            </div>
+          </div>
+          <form class="composer" id="composer">
+            <div class="composer-label">TASK INPUT <span>支持 Orion / Lyra 成本问题</span></div>
+            <textarea id="task-input" rows="3" placeholder="例如：计算 7 个节点运行 43 天的电费，使用已登记的功耗和电价资料。"></textarea>
+            <div class="manual-controls">
+              <label class="control-field entity-field">任务实体
+                <select id="entity-input"><option value="Orion">Orion · 部署成本</option><option value="Lyra">Lyra · 归档成本</option></select>
+              </label>
+              <div class="control-field parameters-field"><span>公开参数</span><div class="parameter-grid" id="parameter-grid"></div></div>
+              <label class="memory-toggle"><input id="memory-toggle-input" type="checkbox" checked><span class="toggle-track"></span><span>复用前序任务记忆</span></label>
+            </div>
+            <div class="composer-bottom">
+              <div class="input-hint"><span class="kbd">⌘</span><span class="kbd">↵</span> 发送任务</div>
+              <button class="primary-button" type="submit"><span>运行协作图</span><span class="button-arrow">↗</span></button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <aside class="right-rail">
+        <section class="panel metric-panel">
+          <div class="section-kicker">03 / SYSTEM SIGNALS</div>
+          <h2>比赛指标</h2>
+          <div class="metric-grid">
+            <div class="metric-card"><span class="metric-label">STATE TRANSFER</span><strong id="metric-state">—</strong><small>float16 count / payload bytes</small></div>
+            <div class="metric-card"><span class="metric-label">MEMORY REUSE</span><strong id="metric-memory">—</strong><small>accepted fact reuse across runs</small></div>
+            <div class="metric-card"><span class="metric-label">COMMUNICATION</span><strong id="metric-messages">—</strong><small>message frames / UTF-8 bytes</small></div>
+            <div class="metric-card"><span class="metric-label">MODEL USAGE</span><strong id="metric-calls">—</strong><small>calls / prompt / generated tokens</small></div>
+            <div class="metric-card"><span class="metric-label">SELF-CHECK</span><strong id="metric-quality">—</strong><small>calculator output and source consistency</small></div>
+          </div>
+        </section>
+        <section class="panel agent-panel">
+          <div class="section-kicker">04 / AGENT GRAPH</div>
+          <h2>运行节点</h2>
+          <div class="agent-stack" id="agent-stack"></div>
+        </section>
+        <section class="panel protocol-panel">
+          <div class="section-kicker">05 / PROTOCOL TRACE</div>
+          <div class="trace-heading"><h2>最近消息</h2><span id="trace-count">0 frames</span></div>
+          <div class="trace-list" id="trace-list"><div class="trace-empty">等待一次任务运行…</div></div>
+        </section>
+        <section class="panel requirements-panel">
+          <div class="section-kicker">06 / SCORECARD</div>
+          <h2>赛题覆盖</h2>
+          <div class="requirement-list">
+            <div><span class="check">✓</span><span>3+ Agent 协作</span><b>READY</b></div>
+            <div><span class="check">✓</span><span>结构化通信</span><b>READY</b></div>
+            <div><span class="check">✓</span><span>非文本状态交换</span><b>READY</b></div>
+            <div><span class="check">✓</span><span>共享记忆复用</span><b>READY</b></div>
+            <div><span class="check">✓</span><span>10 轮连续任务</span><b>READY</b></div>
+            <div><span class="check pending">·</span><span>CodeAct 沙箱</span><b class="pending-text">OPTIONAL</b></div>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="/assets/app.js"></script>
+</body>
+</html>
