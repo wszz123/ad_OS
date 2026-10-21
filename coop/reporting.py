@@ -22,6 +22,14 @@ def summarize_report(data, source):
         row["all_quality_passed"] = bool(modes) and all(
             value["passed_count"] == value["task_count"] for value in modes.values())
         row["scope"] = "Per-trial means; repeated tasks are not independent unique benchmark samples."
+    elif kind == "related_devops_sequences":
+        row.update(evidence="scripted_fixture" if data.get("backend") == "fixture" else "real_model_constructed_service_tasks",
+                   workload=data.get("workload", "unknown"),
+                   metrics={data["mode"]: data.get("totals", {})},
+                   all_quality_passed=(data.get("status") == "complete" and len(data.get("tasks", [])) == 10
+                                       and all(task.get("passed", False) for task in data["tasks"])),
+                   scope=f"One ordered {data.get('requested_tasks', 10)}-task run on a constructed local service; "
+                         "a diagnostic prefix is not a ten-task completion or an external benchmark/speedup claim.")
     elif kind == "unified_evidence_summary":
         return None
     elif kind in ("planner_node_replay_with_atomic_repair_reservations", "sqlite_checkpoint_state_sigkill_recovery"):
@@ -70,6 +78,8 @@ def write_summary(summary, directory):
     lines = ["# 原型实验摘要", "", "按报告列出证据，不混合计算总准确率或通用加速比。", ""]
     for row in summary["reports"]:
         lines.extend([f"## {row['experiment']}", f"- 来源：`{row['source']}`", f"- 证据类型：`{row['evidence']}`"])
+        if "workload" in row:
+            lines.append(f"- 任务环境：`{row['workload']}`")
         for key in ("all_quality_passed", "all_checks_passed"):
             if key in row:
                 lines.append(f"- {key}: {row[key]}")

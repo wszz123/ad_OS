@@ -16,6 +16,7 @@ h3 { margin:0; font-size:16px; letter-spacing:-.04em; }
 .top-status { gap:8px; color:var(--muted); font-size:12px; }
 .status-dot,.live-pulse { width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 0 4px rgba(75,135,108,.12); }
 .ghost-button { margin-left:12px; border:1px solid var(--line); background:rgba(255,255,255,.45); color:var(--ink); padding:8px 12px; border-radius:7px; font-size:11px; }
+.workflow-link { text-decoration:none; white-space:nowrap; }
 .dashboard-grid { display:grid; grid-template-columns:250px minmax(420px,1fr) 355px; gap:16px; padding-top:18px; align-items:start; }
 .left-rail,.right-rail { display:grid; gap:12px; }
 .panel { background:var(--panel); border:1px solid rgba(214,218,210,.8); border-radius:14px; box-shadow:var(--shadow); }

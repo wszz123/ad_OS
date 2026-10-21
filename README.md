@@ -94,6 +94,56 @@ Agent 状态、协议消息、float16 状态传输、记忆复用和模型调用
 
 ## 四角色多步任务
 
+### MoreAgent 医学 50 题试测
+
+用户提供的 `moreagent_50_questions.json` 可经白名单转换，对照父研究仓库的单 Agent、
+TextMAS 和原始 HF LatentMAS。仅将题干/选项传给模型，答案与关联注释留在评测侧；
+本轮不启用跨题记忆。运行、评分和证据口径见 [`MOREAGENT_EVAL.md`](coop/MOREAGENT_EVAL.md)。
+
+子仓库原生医学多 Agent 适配另有独立入口，不是父仓库 TextMAS/LatentMAS：
+
+```bash
+python -m tools.run_medical_workload --backend fixture --modes all --max-samples 50
+# 或真实本地 Qwen
+OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 python -m tools.run_medical_workload \
+  --backend qwen --modes all --max-samples 50 --device cuda:1 --embedding-device cuda:0
+```
+
+详情及医学记忆的来源/未验证边界见 [`MEDICAL_NATIVE_MAS.md`](coop/MEDICAL_NATIVE_MAS.md)。
+
+### 新增：研发—运维双组连续闭环
+
+```bash
+conda activate latentmas
+python -m tools.run_devops_workload --backend fixture --workload project --mode all --max-steps 20
+```
+
+在同一可执行服务上运行两组各五轮任务：运维复现故障并验证前序修复，研发根据运行证据
+修改代码和执行回归。新增带条件循环的 LangGraph、版本化跨组记忆，以及“仅同组记忆”与
+“跨组共享”消融。结果写入 `results/devops/` 的独立实验目录。
+
+这是自建小型任务环境，fixture 包含参考决策和固定向量，不是公开真实数据集或模型性能
+证据；本地 Qwen 决策和 embedding 可用 `--backend qwen` 选择，实际结果按运行报告验收。任务、架构、指标
+口径及环境边界见 [`DEVOPS_WORKLOAD.md`](coop/DEVOPS_WORKLOAD.md)。
+
+**当前默认 V2 是多文件、有状态的项目任务**：8 个代码模块、SQLite 三租户数据、缓存与游标、
+动态策略、原子批量更新、跨 worker 重启的幂等回执。两组各五轮，单次修复涉及 2–3 个文件。
+完整任务和例子见 [`CATALOG_PROJECT_V2.md`](coop/CATALOG_PROJECT_V2.md)。
+旧单函数练习可用 `--workload service`；旧版 Qwen 10/10 不代表新版项目任务已被模型解决。
+
+浏览器可运行同一研发—运维工作流：
+
+```bash
+python -m tools.serve_ui --backend fixture --device cuda:0 --embedding-device cpu --port 8765
+# 打开 http://127.0.0.1:8765/devops
+```
+
+页面支持模式/后端选择、十轮进度及逐轮代码、工具结果、验收和跨组记忆检查。
+页面默认 V2，可切回 V1，并按文件查看候选/部署代码。旧版单函数的 Qwen 实测和失败记录见
+[`DEVOPS_VALIDATION.md`](coop/DEVOPS_VALIDATION.md)，V2 的独立记录见上述新任务文档。
+
+### 原有：成本计算机制任务
+
 使用 Orion 部署成本与 Lyra 归档成本两组各五轮关联任务：
 
 1. Planner 基于公开输入和变量单位目录生成公式/检索请求。

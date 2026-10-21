@@ -33,7 +33,9 @@ class QwenCausalAdapter:
             self.model_path, local_files_only=True, use_fast=True
         )
         kwargs = {"local_files_only": True}
-        if self.device.type != "cpu":
+        if self.device.type == "cpu":
+            kwargs["dtype"] = torch.float32
+        elif self.dtype is not None:
             kwargs["dtype"] = self.dtype
         self.model = AutoModelForCausalLM.from_pretrained(self.model_path, **kwargs)
         self.model.to(self.device)

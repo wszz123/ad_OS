@@ -1,0 +1,2463 @@
+{
+  "schema_version": "moreagent.dataset-presentation-summary/1",
+  "dataset_name": "medical-related-50-v2",
+  "title_zh": "基于MedQA构建的50题医学关联任务集",
+  "purpose_zh": "用于查看题目、准备项目汇报与评估关联任务设计；本文件不是实验运行输入。",
+  "overview": {
+    "total_questions": 50,
+    "original_medqa_questions": 30,
+    "project_authored_questions": 20,
+    "topic_distribution": [
+      {
+        "topic": "anemia",
+        "topic_zh": "贫血",
+        "original_count": 10,
+        "authored_count": 7,
+        "total": 17
+      },
+      {
+        "topic": "renal",
+        "topic_zh": "肾脏",
+        "original_count": 10,
+        "authored_count": 7,
+        "total": 17
+      },
+      {
+        "topic": "thyroid",
+        "topic_zh": "甲状腺",
+        "original_count": 10,
+        "authored_count": 6,
+        "total": 16
+      }
+    ],
+    "ordering_zh": "保持原30题顺序：贫血10题→肾脏10题→甲状腺10题；随后追加衍生题：贫血7题→肾脏7题→甲状腺6题。",
+    "memory_policy_zh": "有记忆条件从各自独立空库开始，按题序在线积累，组间不清空；无记忆条件使用相同任务顺序。",
+    "continuity_zh": "通过前序证据的候选复用、多条知识组合、条件变化及延迟回读体现连续性；病例信息自足，不构成同一患者的连续病程或强制前置依赖。",
+    "limitations_zh": [
+      "原30题已用于项目开发，不属于全新未见独立测试集。",
+      "新增20题为原创合成衍生题，未经独立医学审题，不是官方MedQA题。",
+      "候选关联来自已有评估注释，不代表系统实际保存、召回或引用了相应证据。",
+      "evaluation_only字段包含答案和关联提示，仅供汇报与评估，不得预加载给Agent或初始记忆。",
+      "中文task_focus_zh是主题摘要，不是完整题干翻译；question与options保留原文。"
+    ]
+  },
+  "field_descriptions_zh": {
+    "sequence": "原50题中的实际执行位置",
+    "task_focus_zh": "题目主题的中文摘要",
+    "question": "完整英文题干",
+    "options": "原始选项",
+    "evaluation_only": "答案、解析与候选关联关系，仅供评估侧使用",
+    "candidate_continuity": "设计上的知识关联机会，不是实测复用记录",
+    "related_prior_question_ids": "既有评估注释列出的前序关联题号",
+    "conditions_to_recheck_zh": "将历史证据用于本题时需要重新核对的条件"
+  },
+  "presentation_example": {
+    "title_zh": "球形红细胞相关贫血：证据积累、延迟复用与条件变化",
+    "question_ids": [
+      "medqa::0476",
+      "medqa::0810",
+      "medqa-derived::A03",
+      "medqa-derived::A04"
+    ],
+    "sequences": [
+      7,
+      8,
+      33,
+      34
+    ],
+    "layout_zh": "原题0476→原题0810；从原题知识分支延伸到A03的新变化调查及A04的条件对照。不要将四题描述为严格前置依赖链。",
+    "relation_status": "candidate_design_relationship_not_observed_reuse"
+  },
+  "questions": [
+    {
+      "sequence": 1,
+      "question_id": "medqa::0900",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "小细胞性贫血的铁代谢指标",
+      "key_cues_from_existing_annotations": [
+        "Total iron binding capacity (TIBC) 620",
+        "Mean corpuscular volume (MCV) 71"
+      ],
+      "question": "A 38-year-old man presents with progressive tiredness and shortness of breath on exertion. Past medical history is significant for peptic ulcer disease diagnosed 2 years ago for which he is not compliant with his medications. He reports a 10-pack-year smoking history and occasionally alcohol use. His vital signs include: temperature 37.1°C (98.7°F), blood pressure 142/91 mm Hg, pulse 98/min. Physical examination is unremarkable. Laboratory findings are significant for the following:\nHemoglobin 9.7 g/dL\nHematocrit 29.1%\nRed cell count 3.7 million/mm3\nMean corpuscular volume (MCV) 71 μm3\nMean corpuscular hemoglobin (MCH) 21.3 pg/cell\nMean corpuscular hemoglobin concentration (MCHC) 28.4 Hb/cell\nReticulocyte count 0.2 %\nRed cell distribution width (RDW) 17.8 (ref: 11.5–14.5%)\nWhite blood cell count 8100/mm3\nPlatelet count 420,000/mm3\nIron studies show:\nTotal iron binding capacity (TIBC) 620 μg/dL\nTransferrin saturation 9%\nWhich of the following findings would most likely be found on a bone marrow biopsy in this patient?",
+      "options": {
+        "A": "Hypocellularity with fatty infiltration",
+        "B": "↓ hemosiderin stores",
+        "C": "Ringed sideroblasts",
+        "D": "Myeloblasts with immature precursors"
+      },
+      "evaluation_only": {
+        "answer": "B",
+        "answer_text": "↓ hemosiderin stores",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [],
+          "related_prior_sequences": [],
+          "relation_description_zh": "建立 MCV、TIBC、转铁蛋白饱和度联合解释框架；后续可复用检索证据及来源。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "本题是起始任务；消化道病史需要与检验相结合。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 2,
+      "question_id": "medqa::0418",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "青少年的小细胞性贫血与处理",
+      "key_cues_from_existing_annotations": [
+        "Mean corpuscular volume 76",
+        "concavity of the finger nails"
+      ],
+      "question": "A 16-year-old boy is brought to the physician by his parents for the evaluation of fatigue for several weeks. The parents report that their son quit doing sports at school because of low energy. The patient's academic performance has declined recently. He spends most of his time in the basement playing video games and eating bowls of cereal. He has no history of serious illness. His mother has Hashimoto's thyroiditis and his father has major depressive disorder. The patient does not smoke or drink alcohol. His vital signs are within normal limits. Examination shows conjunctival pallor, inflammation and fissuring of the corners of the mouth, and concavity of the finger nails. The remainder of the examination shows no abnormalities. Laboratory studies show:\nHemoglobin 11.5 g/dL\nMean corpuscular volume 76 μm3\nPlatelet count 290,000/mm3\nRed cell distribution width 18% (N = 13%–15%)\nLeukocyte count 7,000/mm3\nWhich of the following is the most appropriate initial step in treatment?\"",
+      "options": {
+        "A": "Regular blood transfusions",
+        "B": "Methylphenidate",
+        "C": "Iron supplementation",
+        "D": "Allogenic stem cell transplantation"
+      },
+      "evaluation_only": {
+        "answer": "C",
+        "answer_text": "Iron supplementation",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0900"
+          ],
+          "related_prior_sequences": [
+            1
+          ],
+          "relation_description_zh": "复用小细胞性贫血与铁代谢的证据框架。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "重新核对年龄、体征和治疗问题；父母病史不能取代患儿证据。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 3,
+      "question_id": "medqa::1225",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "婴儿饮食背景下的小细胞性贫血",
+      "key_cues_from_existing_annotations": [
+        "Total iron binding capacity (TIBC): 550",
+        "cow’s milk"
+      ],
+      "question": "A 9-month-old boy is brought to his pediatrician by his mother for a routine health checkup. The boy was born at 39 weeks gestation via spontaneous vaginal delivery. He is up to date on all vaccines and is meeting all developmental milestones. He was breastfed for the first 3 months and then switched to cow’s milk and about two months ago she started giving him fruits and vegetables. Family history is noncontributory. Today, his heart rate is 120/min, respiratory rate is 40/min, blood pressure is 90/50 mm Hg, and temperature of 37.0°C (98.6°F). On examination, he has a heartbeat with a regular rate and rhythm and his lungs are clear to auscultation bilaterally. Generally, the boy looks pale. His weight and height fall within the expected range. A complete blood count (CBC) shows the following:\nHemoglobin (Hb): 9.1 g/dL\nMean corpuscular volume (MCV): 65 fL\nTotal iron binding capacity (TIBC): 550 μg/dL\nSerum iron: 45 µg/dL\nSerum lead: < 5 µg/dL\nWhat is the best treatment for this patient?",
+      "options": {
+        "A": "Iron supplementation only",
+        "B": "Proper diet and iron supplementation",
+        "C": "Multivitamins",
+        "D": "Proper diet only"
+      },
+      "evaluation_only": {
+        "answer": "B",
+        "answer_text": "Proper diet and iron supplementation",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0900",
+            "medqa::0418"
+          ],
+          "related_prior_sequences": [
+            1,
+            2
+          ],
+          "relation_description_zh": "复用铁代谢指标解释及相关教材片段。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "婴儿年龄、牛奶喂养与成人处理不同；治疗不能直接照搬。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 4,
+      "question_id": "medqa::0394",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "慢性炎症背景下的小细胞性贫血",
+      "key_cues_from_existing_annotations": [
+        "rheumatoid arthritis",
+        "Serum ferritin 310"
+      ],
+      "question": "A 54-year-old woman presents with fatigue, malaise, and shortness of breath over the past 5 months. Past medical history is significant for rheumatoid arthritis diagnosed 23 years ago for which she takes naproxen as needed. Her vital signs include: temperature 36.9°C (98.4°F), blood pressure 135/88 mm Hg, pulse 92/min. Physical examination is significant for conjunctival pallor and bilateral ulnar deviation of the metacarpophalangeal joints. Laboratory findings are significant for the following:\nHemoglobin 9.2 g/dL\nMean corpuscular volume 76 fL\nLeukocyte count 7,000/mm3\nPlatelet count 220,000/mm3\nSerum ferritin 310 ng/mL\nErythrocyte sedimentation rate 85 mm/h\nWhich of the following is a feature of this patient's anemia?",
+      "options": {
+        "A": "↑ serum transferrin receptors",
+        "B": "↑ transferrin saturation",
+        "C": "Upregulation of hepcidin",
+        "D": "↑ reticulocyte count"
+      },
+      "evaluation_only": {
+        "answer": "C",
+        "answer_text": "Upregulation of hepcidin",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0900",
+            "medqa::0418",
+            "medqa::1225"
+          ],
+          "related_prior_sequences": [
+            1,
+            2,
+            3
+          ],
+          "relation_description_zh": "复用 MCV 和铁指标联合判断方法，保留与前题的差异。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "低 MCV 不等于相同病因；核对类风湿病史、铁蛋白与炎症背景。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 5,
+      "question_id": "medqa::1009",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "相同基础疾病背景、不同贫血机制",
+      "key_cues_from_existing_annotations": [
+        "mean corpuscular volume is 109",
+        "hypersegmented neutrophils"
+      ],
+      "question": "A 45-year-old woman comes to the physician because of a 2-week history of painful ulcers in her mouth. Over the past 2 months, she has had increasing fatigue and difficulties concentrating. She has a history of rheumatoid arthritis and was started on a new medication 4 months ago. Examination shows pallor of the mucosal membranes and three tender ulcerative lesions in her mouth. Her hemoglobin concentration is 8.7 g/dL and mean corpuscular volume is 109 μm3. A blood smear shows hypersegmented neutrophils. Which of the following is the most likely cause of this patient's findings?",
+      "options": {
+        "A": "Deficient heme synthesis",
+        "B": "Deficient erythropoietin secretion",
+        "C": "Deficient nitrogenous base production",
+        "D": "Deficient β-globin chains"
+      },
+      "evaluation_only": {
+        "answer": "C",
+        "answer_text": "Deficient nitrogenous base production",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0394"
+          ],
+          "related_prior_sequences": [
+            4
+          ],
+          "relation_description_zh": "复用贫血分类与药物时间线核对策略。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "虽同为类风湿背景，新用药、口腔溃疡、高 MCV 可能改变机制判断。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 6,
+      "question_id": "medqa::0409",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "大细胞性贫血、神经表现与胃部线索",
+      "key_cues_from_existing_annotations": [
+        "macrocytic anemia",
+        "normal thyroid hormone levels"
+      ],
+      "question": "A 44-year-old woman with hypothyroidism comes to the physician because of a 1-month history of tingling in her feet and poor balance. Her only medication is levothyroxine. Physical examination shows conjunctival pallor and an ataxic gait. Proprioception and sense of vibration are decreased in her toes bilaterally. Laboratory studies show macrocytic anemia and normal thyroid hormone levels. Histological evaluation of tissue samples obtained by esophagogastroduodenoscopy reveals atrophic changes of the gastric body and fundus with normal antral mucosa. Which of the following structures is most likely being targeted by antibodies in this patient?",
+      "options": {
+        "A": "Islet cell cytoplasm",
+        "B": "Deamidated gliadin peptide",
+        "C": "Parietal cells",
+        "D": "Smooth muscle"
+      },
+      "evaluation_only": {
+        "answer": "C",
+        "answer_text": "Parietal cells",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::1009"
+          ],
+          "related_prior_sequences": [
+            5
+          ],
+          "relation_description_zh": "复用大细胞性贫血鉴别框架，补充吸收机制和抗体证据。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "不能把所有大细胞性贫血归为同一种原因；核对神经表现和胃部位。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 7,
+      "question_id": "medqa::0476",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "溶血相关检验与红细胞形态",
+      "key_cues_from_existing_annotations": [
+        "osmotic fragility test",
+        "Coombs"
+      ],
+      "question": "A 14-year-old boy presents with right upper quadrant abdominal pain and is found on ultrasound to have a gallstone. Based on clinical suspicion, a CBC, a Coombs test, and a bilirubin panel are obtained to determine the etiology of the gallstone. These tests reveal a mild normocytic anemia with associated reticulocytosis as well as an increased RDW. In addition there is an indirect hyperbilirubinemia and the Coombs test results are negative. To confirm the diagnosis, an osmotic fragility test is performed which shows increased fragility in hypotonic solution. In this patient, what findings would most likely be anticipated if a blood smear were obtained?",
+      "options": {
+        "A": "Hypersegmented neutrophils",
+        "B": "Sideroblasts",
+        "C": "Spherocytes",
+        "D": "Dacrocytes"
+      },
+      "evaluation_only": {
+        "answer": "C",
+        "answer_text": "Spherocytes",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [],
+          "related_prior_sequences": [],
+          "relation_description_zh": "建立 Coombs、渗透脆性、胆红素、网织红细胞联合判断规则，供后题使用。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "属于新机制分支；不能声称前面缺铁证据已经回答本题。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 8,
+      "question_id": "medqa::0810",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "由形态和病史选择诊断检查",
+      "key_cues_from_existing_annotations": [
+        "spherocytes",
+        "Coombs test is negative"
+      ],
+      "question": "An otherwise healthy 49-year-old woman has a routine full blood count complete prior her elective cholecystectomy. The lab test results are as follows:\nLaboratory test\nHemoglobin\n12.1 g/dL\nMean corpuscular volume (MCV)\n85 μm3\nMean corpuscular hemoglobin concentration (MCHC)\n47%\nReticulocyte count\n3.4 %\nWhite blood cell count\n9700/mm3\nPlatelet count\n229,000/mm3\nA peripheral blood smear reveals spherocytes. The Coombs test is negative. The physical examination is remarkable for scleral icterus and moderate splenomegaly. Which of the following is the most appropriate diagnostic test of this patient’s underlying disorder?",
+      "options": {
+        "A": "Eosin-5-maleimide binding test",
+        "B": "Flow cytometry for CD55/CD59",
+        "C": "Anti parvovirus B19 antibodies",
+        "D": "Liver function tests"
+      },
+      "evaluation_only": {
+        "answer": "A",
+        "answer_text": "Eosin-5-maleimide binding test",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0476"
+          ],
+          "related_prior_sequences": [
+            7
+          ],
+          "relation_description_zh": "复用上一题的溶血检查规则与来源；提问方向从形态变为检查。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "核对成人病例、球形细胞、Coombs 结果，不能复用选项字母。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 9,
+      "question_id": "medqa::0673",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "慢性溶血背景下的营养与口腔表现",
+      "key_cues_from_existing_annotations": [
+        "reticulocyte count of 9%",
+        "mean corpuscular volume of 104"
+      ],
+      "question": "A 7-year-old boy is brought to the physician because of a 3-week history of burning sensation in his mouth. One year ago, a peripheral blood smear performed during workup of fatigue revealed erythrocytes without central pallor. His father had gallstones, for which he underwent a cholecystectomy at the age of 26 years. Examination shows pallor of the mucosal membranes, mild scleral icterus, a swollen, red tongue, and several mouth ulcers. There is darkening of the skin over the dorsal surfaces of the fingers, toes, and creases of the palms and soles. His spleen is enlarged and palpable 3 cm below the left costal margin. Laboratory studies show a hemoglobin concentration of 9.1 gm/dL, mean corpuscular volume of 104 μm3, and a reticulocyte count of 9%. Which of the following would most likely have prevented this patient's oropharyngeal symptoms?",
+      "options": {
+        "A": "Red blood cell transfusions",
+        "B": "Gluten-free diet",
+        "C": "Vitamin B12 injections",
+        "D": "Folic acid supplementation"
+      },
+      "evaluation_only": {
+        "answer": "D",
+        "answer_text": "Folic acid supplementation",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0476",
+            "medqa::0810",
+            "medqa::1009",
+            "medqa::0409"
+          ],
+          "related_prior_sequences": [
+            7,
+            8,
+            5,
+            6
+          ],
+          "relation_description_zh": "组合溶血分支和大细胞性贫血分支的信息需求与检索经验。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "需考虑网织红细胞比例及家族线索；高 MCV 不能直接复制前题结论。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 10,
+      "question_id": "medqa::1205",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "间隔多轮后再次识别小细胞/低色素线索",
+      "key_cues_from_existing_annotations": [
+        "increased zones of central pallor",
+        "anisocytosis"
+      ],
+      "question": "A 78-year-old man comes to the physician because of progressively worsening fatigue and headache for 6 months and occasional abdominal pain. He has not had any changes in his weight. He has a history of hypertension, type 2 diabetes mellitus, and chronic shoulder pain. Current daily medications include hydrochlorothiazide, metformin, and ibuprofen. He does not drink alcohol and does not smoke. His diet has mostly consisted of potatoes and lean meats since his wife passed away 1 year ago. His pulse is 92/min and blood pressure is 135/80 mm Hg. Examination shows conjunctival and mucosal pallor. Abdominal and rectal examination shows no abnormalities. Neurological exam shows mild postural tremor. Peripheral blood smear shows red blood cells with increased zones of central pallor and anisocytosis. Which of the following is the most likely underlying cause of this patient’s symptoms?",
+      "options": {
+        "A": "Folic acid deficiency",
+        "B": "Intravascular hemolysis",
+        "C": "Impaired erythropoietin production",
+        "D": "Iron deficiency"
+      },
+      "evaluation_only": {
+        "answer": "D",
+        "answer_text": "Iron deficiency",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0900",
+            "medqa::0418",
+            "medqa::1225"
+          ],
+          "related_prior_sequences": [
+            1,
+            2,
+            3
+          ],
+          "relation_description_zh": "检验早期贫血形态与铁代谢框架能否在中间任务干扰后回读。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "重新核对高龄、药物、饮食和出血线索；不把历史病因当作本题事实。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 11,
+      "question_id": "medqa::0574",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "滤过屏障与大量蛋白尿",
+      "key_cues_from_existing_annotations": [
+        "loss of polyanions",
+        "proteinuria exceeding 3.5g"
+      ],
+      "question": "An 11-year-old boy presents to your office with pitting edema and proteinuria exceeding 3.5g in 24 hours. You suspect that this patient has experienced a loss of polyanions in his glomerular basement membranes. Which of the following findings would confirm your diagnosis?",
+      "options": {
+        "A": "WBC casts in the urine",
+        "B": "Selective albuminuria",
+        "C": "Negatively birefringent crystals in the urine",
+        "D": "Bence-Jones proteinuria"
+      },
+      "evaluation_only": {
+        "answer": "B",
+        "answer_text": "Selective albuminuria",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [],
+          "related_prior_sequences": [],
+          "relation_description_zh": "建立蛋白滤过、选择性及尿液表现的证据框架。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "起始任务；题干给出的屏障变化不能推广为所有蛋白尿病因。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 12,
+      "question_id": "medqa::0145",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "儿童水肿、蛋白尿与检验组合",
+      "key_cues_from_existing_annotations": [
+        "Albumin 2.1",
+        "Blood negative",
+        "Protein 4+"
+      ],
+      "question": "A 5-year-old boy is brought to the physician because of facial swelling that started 5 days ago. Two weeks ago, he had a sore throat that resolved spontaneously. His temperature is 37°C (98.6°F), pulse is 107/min, and blood pressure is 94/67 mm Hg. Examination shows pitting edema of the upper and lower extremities as well as periorbital edema. The abdomen is mildly distended. Laboratory studies show:\nHemoglobin 13.1 g/dL\nSerum\nAlbumin 2.1 g/dL\nTotal cholesterol 270 mg/dL\nTriglycerides 175 mg/dL\nUrine\nBlood negative\nGlucose negative\nProtein 4+\nLeukocyte esterase negative\nA renal biopsy of this patient is most likely to show which of the following findings?\"",
+      "options": {
+        "A": "Mesangial proliferation on light microscopy",
+        "B": "Subepithelial dense deposits on electron microscopy",
+        "C": "Deposits of IgG and C3 at the glomerular basement membrane on immunofluoresence",
+        "D": "Normal light microscopy findings"
+      },
+      "evaluation_only": {
+        "answer": "D",
+        "answer_text": "Normal light microscopy findings",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0574"
+          ],
+          "related_prior_sequences": [
+            11
+          ],
+          "relation_description_zh": "复用蛋白滤过及尿液表现框架，核对病理信息需求。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "咽痛只是背景；必须核对尿潜血阴性、白蛋白和血脂，防止误套诊断。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 13,
+      "question_id": "medqa::0169",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "相似感染背景下、尿检不同的免疫机制问题",
+      "key_cues_from_existing_annotations": [
+        "numerous RBCs",
+        "antistreptolysin O titer is elevated"
+      ],
+      "question": "An 8-year-old girl comes to the physician because of a 2-day history of hematuria. Two weeks ago, she had a sore throat that resolved without treatment. Physical examination shows 1+ pitting edema of the lower legs and ankles. Urinalysis shows numerous RBCs and 3+ proteinuria. Her antistreptolysin O titer is elevated. Formation of which of the following is most likely involved in the underlying mechanism of this patient's symptoms?",
+      "options": {
+        "A": "Antigen-specific IgE binding to mast cells",
+        "B": "Tissue-specific antibodies",
+        "C": "Antigen-antibody complexes",
+        "D": "Presensitized CD8+ cytotoxic T-cells"
+      },
+      "evaluation_only": {
+        "answer": "C",
+        "answer_text": "Antigen-antibody complexes",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0145",
+            "medqa::0574"
+          ],
+          "related_prior_sequences": [
+            12,
+            11
+          ],
+          "relation_description_zh": "复用前题尿检鉴别方法，形成相似病史下的条件对照。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "本题有大量红细胞和 ASO 线索；不能因两题都有咽痛就复制病理结论。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 14,
+      "question_id": "medqa::0533",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "补体线索与肾小球病理",
+      "key_cues_from_existing_annotations": [
+        "positive for C3 nephritic factor",
+        "electron dense deposits"
+      ],
+      "question": "A 36-year-old woman presents with increased tiredness and lethargy for the past 4 weeks. Investigations show her hemoglobin level to be 8.6 gm/dL and serum creatinine of 4.6 mg/dL. The serum is negative for antinuclear antibodies (ANA) and positive for C3 nephritic factor. Urinalysis shows a 3+ proteinuria. The renal biopsy demonstrates hypercellular glomerulus with electron dense deposits along the glomerular basement membrane. What is the most likely cause?",
+      "options": {
+        "A": "Membrano proliferative glomerulonephritis (MPGN)",
+        "B": "Rapidly progressive glomerulonephritis (RPGN)",
+        "C": "Minimal change disease",
+        "D": "Membranous glomerulonephritis (MGN)"
+      },
+      "evaluation_only": {
+        "answer": "A",
+        "answer_text": "Membrano proliferative glomerulonephritis (MPGN)",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0574",
+            "medqa::0169"
+          ],
+          "related_prior_sequences": [
+            11,
+            13
+          ],
+          "relation_description_zh": "复用蛋白尿、肾小球免疫机制的检索框架，增加补体机制证据。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "C3 因子和沉积物形态是新信息；与感染后病例需区分。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 15,
+      "question_id": "medqa::0697",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "肺部表现与肾小球血尿的组合",
+      "key_cues_from_existing_annotations": [
+        "RBC casts",
+        "hemoptysis"
+      ],
+      "question": "A 35-year-old male presents to the emergency department for evaluation of hemoptysis. A chest X-ray reveals bilateral focal pulmonary consolidation. On further questioning, he admits having hematuria. Urinalysis shows RBC casts and 400 mL of urine is excreted in 24 hours. What is the most likely cause of hemoptysis and hematuria in this patient?",
+      "options": {
+        "A": "Anti-Smith antibodies",
+        "B": "Anti-neutrophil antibodies",
+        "C": "Anti-mitochondrial antibodies",
+        "D": "Anti-glomerular basement membrane antibodies"
+      },
+      "evaluation_only": {
+        "answer": "D",
+        "answer_text": "Anti-glomerular basement membrane antibodies",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0169"
+          ],
+          "related_prior_sequences": [
+            13
+          ],
+          "relation_description_zh": "复用红细胞及管型定位方法；建立肺肾共同机制的新证据。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "血尿不单独决定病因；需要解释肺部表现和少尿。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 16,
+      "question_id": "medqa::0162",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "由同类肺肾表现及血清学定位病理",
+      "key_cues_from_existing_annotations": [
+        "Anti-glomerular basement membrane serologies are positive"
+      ],
+      "question": "A 59-year-old man presents to his primary care provider with fatigue, a progressively worsening cough with flecks of blood, shortness of breath, and dark urine. He reports feeling ill for the past 3 weeks. Past medical history is significant for hypertension and hyperlipidemia. He takes chlorthalidone and atorvastatin. Family history is noncontributory. He has smoked 20–30 cigarettes daily for the past 26 years. Anti-glomerular basement membrane serologies are positive. Which of the following is a specific feature for this patient’s condition?",
+      "options": {
+        "A": "Granulomatous inflammation and necrotizing vasculitis",
+        "B": "Positive cryoglobulins",
+        "C": "Linear IgG staining on immunofluorescence",
+        "D": "Longitudinal splitting and thickening of the glomerular basement membrane"
+      },
+      "evaluation_only": {
+        "answer": "C",
+        "answer_text": "Linear IgG staining on immunofluorescence",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0697"
+          ],
+          "related_prior_sequences": [
+            15
+          ],
+          "relation_description_zh": "复用前题肺肾机制证据，提问方向变为具体病理特征。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "核对本题明确的血清学条件；历史病例的诊断仍须本题支持。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 17,
+      "question_id": "medqa::0465",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "镇痛药背景下的血尿与腰痛",
+      "key_cues_from_existing_annotations": [
+        "acetaminophen and aspirin",
+        "acute, colicky flank pain"
+      ],
+      "question": "A 45-year-old female presents to the emergency department with gross hematuria and acute, colicky flank pain. She denies any previous episodes of hematuria. She reports taking high doses of acetaminophen and aspirin over several weeks due to persistent upper back pain. The patient’s blood pressure and temperature are normal, but she is found to have proteinuria. Physical examination is negative for palpable flank masses. Which of the following is the most likely diagnosis:",
+      "options": {
+        "A": "Diffuse cortical necrosis",
+        "B": "Chronic pyelonephritis",
+        "C": "Papillary necrosis",
+        "D": "Acute Nephrolithiasis"
+      },
+      "evaluation_only": {
+        "answer": "C",
+        "answer_text": "Papillary necrosis",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0169",
+            "medqa::0697"
+          ],
+          "related_prior_sequences": [
+            13,
+            15
+          ],
+          "relation_description_zh": "复用血尿来源鉴别，新增药物损伤机制检索。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "出现药物及绞痛线索；不能把血尿自动归入此前免疫性肾小球病。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 18,
+      "question_id": "medqa::0216",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "镇痛药病例的损伤机制与尿沉渣对照",
+      "key_cues_from_existing_annotations": [
+        "no casts or dysmorphic RBCs",
+        "aspirin"
+      ],
+      "question": "A 48-year-old woman with chronic tension headaches comes to the physician because of several episodes of bilateral flank pain and reddish urine within the past month. Current medications include aspirin, which she takes almost daily for headaches. Her temperature is 37.4°C (99.3°F) and her blood pressure is 150/90 mm Hg. Physical examination shows costovertebral tenderness to percussion bilaterally. Laboratory studies show a hemoglobin concentration of 10.2 g/dL and serum creatinine concentration of 2.4 mg/dL. Urine studies show:\nUrine\nProtein\n3+\nRBC > 16/hpf\nWBC 2/hpf\nThere are no casts or dysmorphic RBCs visualized on microscopic analysis of the urine. Which of the following is the most likely underlying cause of this patient's hematuria?\"",
+      "options": {
+        "A": "Tubular lumen obstruction by protein casts",
+        "B": "Necrotizing inflammation of the renal glomeruli",
+        "C": "Bacterial infection of the renal parenchyma",
+        "D": "Vasoconstriction of the medullary vessels"
+      },
+      "evaluation_only": {
+        "answer": "D",
+        "answer_text": "Vasoconstriction of the medullary vessels",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0465",
+            "medqa::0697"
+          ],
+          "related_prior_sequences": [
+            17,
+            15
+          ],
+          "relation_description_zh": "复用药物损伤证据，并与红细胞管型分支作比较。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "核对无管型、无畸形红细胞的否定条件及用药史。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 19,
+      "question_id": "medqa::1153",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "系统性表现下的蛋白尿类型",
+      "key_cues_from_existing_annotations": [
+        "proteinuria without any RBCs",
+        "Calcium 12.1"
+      ],
+      "question": "A 68-year-old man presents to his primary care physician with complaints of increased fatigue and back pain for the past year. His symptoms are progressively getting worse over the past few months despite adequate rest and trial of over the counter analgesics. His back pain is constant and non-radiating in nature. He denies any trauma to his back. His past medical history is insignificant. On examination, there is mild tenderness over the lumbar region in the midline with an absence of paraspinal muscle tenderness. Straight leg raise test is negative. His skin and conjunctiva appear pale. The physician orders basic blood work. His results are provided below.\nComplete blood count\nRBC 4.9 million cells/µL\nHemoglobin 9.8 g/dL\nHematocrit 41%\nTotal leukocyte count 6,800 cells/µL\nNeutrophils 70%\nLymphocyte 26%\nMonocytes 3%\nEosinophil 1%\nBasophils 0%\nPlatelets 230,000 cells/µL\nBasic Metabolic Panel\nSodium 136 mEq/L\nPotassium 5.1 mEq/L\nChloride 101 mEq/L\nBicarbonate 24 mEq/L\nAlbumin 3.6 mg/ dL\nUrea nitrogen 31 mg/dL\nCreatinine 2.7 mg/dL\nUric Acid 6.7 mg/dL\nCalcium 12.1 mg/dL\nGlucose 105 mg/dL\nUrinalysis shows proteinuria without any RBCs or pus cells. The patient’s proteinuria best fits in which of the following category?",
+      "options": {
+        "A": "Overflow proteinuria",
+        "B": "Transient (functional) proteinuria",
+        "C": "Orthostatic proteinuria",
+        "D": "Isolated proteinuria"
+      },
+      "evaluation_only": {
+        "answer": "A",
+        "answer_text": "Overflow proteinuria",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0574",
+            "medqa::0145"
+          ],
+          "related_prior_sequences": [
+            11,
+            12
+          ],
+          "relation_description_zh": "复用蛋白尿分类框架，识别需要新证据解释的分支。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "高钙、骨痛、贫血及无红细胞信息需要联合解释；不能一概套用屏障异常。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 20,
+      "question_id": "medqa::1094",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "间隔多轮后再次处理大量蛋白尿与水肿",
+      "key_cues_from_existing_annotations": [
+        "Hodgkin's lymphoma",
+        "fatty casts"
+      ],
+      "question": "A 25-year-old female with Hodgkin's lymphoma presents with a several day history of edema. Lab studies show:\n\nSerum Na+: 140 mmol/L\nSerum K+: 3.5 mmol/L\nSerum albumin: 1.9 g/dL\nTotal serum bilirubin: 1.0 mg/dL\nSerum creatinine: 1.2 mg/dL\n\nUrinalysis shows 4+ proteinuria and fatty casts. What is the most likely diagnosis?",
+      "options": {
+        "A": "Focal segmental glomerulosclerosis",
+        "B": "Membranous nephropathy",
+        "C": "Minimal change disease",
+        "D": "Amyloidosis"
+      },
+      "evaluation_only": {
+        "answer": "C",
+        "answer_text": "Minimal change disease",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0574",
+            "medqa::0145"
+          ],
+          "related_prior_sequences": [
+            11,
+            12
+          ],
+          "relation_description_zh": "检验早期蛋白尿/尿液形态规则的延迟回读，加入新的系统疾病条件。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "Hodgkin 病史与脂肪管型需核对；保留病因关联边界。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 21,
+      "question_id": "medqa::0067",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "母亲甲状腺治疗史与新生儿症状",
+      "key_cues_from_existing_annotations": [
+        "history of Graves' disease"
+      ],
+      "question": "A 3-week-old male newborn is brought to the hospital because of poor weight gain since birth. He was born at 38 weeks' gestation via normal vaginal delivery. He weighed 3005 g (6 lb, 10 oz) at birth and currently weighs 2835 g (6 lb, 4 oz). He has been latching on and breastfeeding well since birth. His mother has a history of Graves' disease and underwent near-total thyroidectomy in the second trimester of her pregnancy after her symptoms could not be controlled with antithyroid drugs. She is currently receiving L-thyroxine therapy. The patient's temperature is 38.9°C (102°F), pulse is 176/min, and respirations are 42/min. He appears irritable. Examination shows a diaphoretic infant with a paucity of subcutaneous fat. There is swelling of the neck at the midline. Which of the following is the most likely cause?",
+      "options": {
+        "A": "Transplacental passage of thyroid peroxidase antibodies",
+        "B": "Transplacental passage of TSH receptor antibodies",
+        "C": "Transplacental viral infection",
+        "D": "Opiate use in the mother"
+      },
+      "evaluation_only": {
+        "answer": "B",
+        "answer_text": "Transplacental passage of TSH receptor antibodies",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [],
+          "related_prior_sequences": [],
+          "relation_description_zh": "建立母体治疗、抗体与新生儿功能状态分开核对的框架。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "母亲术后替代用药不能直接决定婴儿的功能状态。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 22,
+      "question_id": "medqa::0361",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "相似母婴背景下选择下一步处理",
+      "key_cues_from_existing_annotations": [
+        "propylthiouracil during the last trimester"
+      ],
+      "question": "A 6-day-old male newborn is brought to the physician because he has become increasingly irritable and restless over the past 2 days. During this period, he has had 12 bowel movements. He feeds 10 to 12 times a day. He was born at 38 weeks' gestation and weighed 1800 g (3 lb 15 oz); he currently weighs 1700 g (3 lb 12 oz). His mother has Graves' disease and received propylthiouracil during the last trimester of pregnancy. She has a history of intravenous heroin use. His temperature is 36.9°C (98.4°F), pulse is 180/min, and respirations are 50/min. Examination shows mild diaphoresis and a firm 2-cm midline neck swelling. The lungs are clear to auscultation. Which of the following is the most appropriate next step in management?",
+      "options": {
+        "A": "Methimazole and propranolol therapy",
+        "B": "Potassium iodide therapy",
+        "C": "Naloxone therapy",
+        "D": "Calcium gluconate therapy"
+      },
+      "evaluation_only": {
+        "answer": "A",
+        "answer_text": "Methimazole and propranolol therapy",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0067"
+          ],
+          "related_prior_sequences": [
+            21
+          ],
+          "relation_description_zh": "复用母婴机制证据；提问从原因变为处理。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "重新核对新生儿日龄、症状和母亲晚孕用药。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 23,
+      "question_id": "medqa::0089",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "妊娠早期功能异常的治疗选择",
+      "key_cues_from_existing_annotations": [
+        "currently 10 weeks pregnant"
+      ],
+      "question": "A 26-year-old G1P0 woman presents to her primary care physician’s office with feelings of anxiety and trouble with sleep. She finds it difficult initiating sleep, occasionally has palpitations, and feels fatigued. She denies having similar symptoms in the past or starting any new medications or illicit drugs. She is currently 10 weeks pregnant and is closely followed by her obstetrician. Her temperature is 98.6°F (37°C), blood pressure is 125/70 mmHg, pulse is 105/min, and respirations are 18/min. On physical exam, the patient is mildly diaphoretic. The skin is warm and the thyroid gland is diffusely enlarged with thyroid bruits. Laboratory studies are significant for a thyroid-stimulating hormone level of 0.01 µU/mL (normal is 0.5-5.0 µU/mL) and an elevated free thyroxine (FT4) that is inappropriate for her pregnancy. Which of the following is the best treatment option for this patient?",
+      "options": {
+        "A": "Methimazole",
+        "B": "Propylthiouracil",
+        "C": "Radioiodine therapy",
+        "D": "Thyroidectomy"
+      },
+      "evaluation_only": {
+        "answer": "B",
+        "answer_text": "Propylthiouracil",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0067",
+            "medqa::0361"
+          ],
+          "related_prior_sequences": [
+            21,
+            22
+          ],
+          "relation_description_zh": "延续母婴用药条件记录，补充孕期治疗证据。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "当前患者是孕妇，不能照搬新生儿处理；孕周是关键。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 24,
+      "question_id": "medqa::0512",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "原有治疗稳定但新发现妊娠",
+      "key_cues_from_existing_annotations": [
+        "well-controlled with daily methimazole"
+      ],
+      "question": "A 35-year-old woman presents to her primary care provider concerned that she may be pregnant. She has a history of regular menstruation every 4 weeks that lasts about 4 days with mild to moderate bleeding, but she missed her last period 2 weeks ago. A home pregnancy test was positive. She has a 6-year history of hyperthyroidism that is well-controlled with daily methimazole. She is currently asymptomatic and has no complaints or concerns. A blood specimen is taken and confirms the diagnosis. Additionally, her thyroid-stimulating hormone (TSH) is 2.0 μU/mL. Which of the following is the next best step in the management of this patient?",
+      "options": {
+        "A": "Continue methimazole",
+        "B": "Discontinue methimazole, start propylthiouracil",
+        "C": "Add glucocorticoids",
+        "D": "Refer for radioiodine therapy"
+      },
+      "evaluation_only": {
+        "answer": "B",
+        "answer_text": "Discontinue methimazole, start propylthiouracil",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0089"
+          ],
+          "related_prior_sequences": [
+            23
+          ],
+          "relation_description_zh": "复用孕期药物适用条件，核对是否需要调整原方案。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "本题已有用药且症状稳定；仍需核对妊娠时期和当前指标。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 25,
+      "question_id": "medqa::0137",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "合并眼部表现时比较治疗风险",
+      "key_cues_from_existing_annotations": [
+        "extraocular muscle with sparing of the tendons"
+      ],
+      "question": "A 36-year-old woman comes to the clinic because of tearing and a foreign body sensation in her eyes bilaterally, which has gradually worsened over the last several weeks. She also notes having occasional palpitations, nervousness, sweating, and heat intolerance. Her past medical history is unremarkable. She reports a 20-pack-year smoking history and is currently a daily smoker. Physical examination shows an anxious, trembling woman. She has eyelid retraction bilaterally, with an inability to fully close her eyes. Her extraocular motility is limited on upgaze. There is no thyromegaly, and no thyroid nodules are noted. Laboratory studies reveal a thyroid-stimulating hormone level of 0.1 μU/mL and total T4 of 42 μg/dL. Thyroid-stimulating immunoglobulin is positive. CT scan of the orbits shows proptosis and marked enlargement of the extraocular muscle with sparing of the tendons. Which of the following would most likely transiently worsen this patient’s eye symptoms?",
+      "options": {
+        "A": "External orbital radiation",
+        "B": "Selenium supplementation",
+        "C": "Systemic corticosteroids",
+        "D": "Treatment with radioactive iodine"
+      },
+      "evaluation_only": {
+        "answer": "D",
+        "answer_text": "Treatment with radioactive iodine",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0089",
+            "medqa::0512"
+          ],
+          "related_prior_sequences": [
+            23,
+            24
+          ],
+          "relation_description_zh": "复用治疗方式索引，补充眼部表现对应的风险证据。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "孕期规则不直接决定本题；眼部表现和吸烟是新条件。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 26,
+      "question_id": "medqa::1061",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "停药和感染后出现急性严重症状",
+      "key_cues_from_existing_annotations": [
+        "last took approximately 1 week ago"
+      ],
+      "question": "A 37-year-old woman presents to the emergency department with confusion, anxiety, sweating, and episodes of vomiting. She is accompanied by her sister who says that her symptoms developed acutely and is unsure about what caused it. She is currently on methimazole, which she last took approximately 1 week ago. Approximately 5 days ago she developed an upper respiratory infection managed with bed rest and ibuprofen. Her temperature is 105°F (40.6°C), blood pressure is 95/68 mmHg, pulse is 145/min, and respirations are 23/min. On physical examination, the patient has altered mentation and is agitated and diaphoretic. The patient also has a goiter, exophthalmos, warm skin, and a hand tremor. She is started on intravenous fluids. Which of the following is the best treatment option for this patient?",
+      "options": {
+        "A": "Antibiotics",
+        "B": "Carotid massage",
+        "C": "Clonazepam",
+        "D": "Propranolol"
+      },
+      "evaluation_only": {
+        "answer": "D",
+        "answer_text": "Propranolol",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0089",
+            "medqa::0137"
+          ],
+          "related_prior_sequences": [
+            23,
+            25
+          ],
+          "relation_description_zh": "复用功能异常表现与治疗类别；补充急性处理条件。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "急性严重程度、停药时间与感染不能丢失，慢性方案不可照搬。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 27,
+      "question_id": "medqa::0103",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "低体温、心率及激素组合的鉴别",
+      "key_cues_from_existing_annotations": [
+        "TSH 110.0"
+      ],
+      "question": "A 75-year-old woman is brought by a patrolman to the emergency department because of altered mental status. She was found wandering next to the highway. The patient was unable to answer questions and collapsed in transit. Her vitals are: temperature, 33.0°C (91.4°F); pulse, 40/min; respirations,12/min; blood pressure, 80/50 mm Hg; and oxygen saturation, 85% on room air. Physical examination shows decorticate posturing, incomprehensible speech, eyes opening to pain, dry hair, coarse and waxy skin, and non-pitting edema around the face and all extremities. Electrocardiogram shows sinus bradycardia. Laboratory studies show:\nCalcium 9.0 mg/dL\nHematocrit (female) 34%\nPotassium 4.0 mEq/L\nSodium 120 mEq/L\nTSH 110.0 µU/mL\nThyroxine (T4) 1.2 µg/dL\nTriiodothyronine (T3) 70 ng/dL\nWhich of the following is the most likely diagnosis in this patient?",
+      "options": {
+        "A": "Myxedema coma",
+        "B": "Pheochromocytoma crisis",
+        "C": "Septic shock",
+        "D": "Tertiary hyperparathyroidism"
+      },
+      "evaluation_only": {
+        "answer": "A",
+        "answer_text": "Myxedema coma",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [],
+          "related_prior_sequences": [],
+          "relation_description_zh": "建立低功能指标与严重症状联合解释的独立分支。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "不能把所有意识改变都归入前面的高功能分支。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 28,
+      "question_id": "medqa::0124",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "先天性功能异常的症状排除题",
+      "key_cues_from_existing_annotations": [
+        "would NOT be expected"
+      ],
+      "question": "A obstetrician is working in a developing country to help promote maternal health and fetal well being. While there, he delivers a baby who he suspects has congenital hypothyroidism, most likely caused by inadequate maternal iodine intake. Which of the following signs and symptoms would NOT be expected to be observed in this child?",
+      "options": {
+        "A": "Hypotonia",
+        "B": "Diarrhea",
+        "C": "Umbilical hernia",
+        "D": "Macroglossia"
+      },
+      "evaluation_only": {
+        "answer": "B",
+        "answer_text": "Diarrhea",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0103",
+            "medqa::0067"
+          ],
+          "related_prior_sequences": [
+            27,
+            21
+          ],
+          "relation_description_zh": "复用功能状态与症状对应框架，核对年龄和母婴条件。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "本题问 NOT；先天情况不等同于老年急症。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 29,
+      "question_id": "medqa::0229",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "重症病程中异常激素结果如何解释",
+      "key_cues_from_existing_annotations": [
+        "intensive care unit for septic shock"
+      ],
+      "question": "Three days after admission to the intensive care unit for septic shock and bacteremia from a urinary tract infection, a 34-year-old woman has persistent hypotension. Her blood cultures are positive for Escherichia coli, for which she has been receiving appropriate antibiotics since admission. She has no history of any serious illness. She does not use illicit drugs. Current medications include norepinephrine, ceftriaxone, and acetaminophen. She appears well. Her temperature is 37.5°C (99.5°F), heart rate is 96/min, and blood pressure is 85/55 mm Hg. Examination of the back shows costovertebral tenderness bilaterally. Examination of the thyroid gland shows no abnormalities. Laboratory studies show:\n  Hospital day 1 Hospital day 3\nLeukocyte count 18,500/mm3 10,300/mm3\nHemoglobin 14.1 mg/dL 13.4 mg/dL\nSerum\nCreatinine 1.4 mg/dL 0.9 mg/dL\nFasting glucose 95 mg/dL 100 mg/dL\nTSH   1.8 µU/mL\nT3, free   0.1 ng/dL\nT4, free   0.9 ng/dL\nRepeat blood cultures are negative. A chest X-ray shows no abnormalities. Which of the following is the most appropriate treatment?",
+      "options": {
+        "A": "Bromocriptine",
+        "B": "Levothyroxine",
+        "C": "Removing toxic drugs",
+        "D": "Treating the underlying illness"
+      },
+      "evaluation_only": {
+        "answer": "D",
+        "answer_text": "Treating the underlying illness",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0103"
+          ],
+          "related_prior_sequences": [
+            27
+          ],
+          "relation_description_zh": "复用 TSH/T3/T4 联合核对方法，检验不适用历史结论的能力。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "低激素数值不能单独触发替代治疗；重症和病程是新背景。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 30,
+      "question_id": "medqa::0396",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "original_medqa",
+      "source_description_zh": "原始MedQA题，题干与选项保持原样",
+      "task_focus_zh": "有功能异常但甲状腺检查无明显异常",
+      "key_cues_from_existing_annotations": [
+        "complex structure in her right ovary"
+      ],
+      "question": "A 25-year-old woman comes to the office complaining of pelvic pain and feeling “off” for the past few weeks. She has not had any changes in diet or lifestyle but reports weight loss despite an increase in appetite. In addition, she has been experiencing chest palpitations, increased frequency of diarrhea, and heat intolerance. Physical exam of her thyroid is unremarkable but her TSH was found to be 0.21 mIU/L. A complex structure in her right ovary was detected on ultrasound. Her symptoms can be explained by which of the following?",
+      "options": {
+        "A": "Meigs syndrome",
+        "B": "Jod-Basedow phenomenon",
+        "C": "Dermoid cyst",
+        "D": "Struma ovarii"
+      },
+      "evaluation_only": {
+        "answer": "D",
+        "answer_text": "Struma ovarii",
+        "rationale_zh": null,
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0089",
+            "medqa::0137"
+          ],
+          "related_prior_sequences": [
+            23,
+            25
+          ],
+          "relation_description_zh": "延迟回读功能指标和症状证据，再调查新病灶来源。",
+          "continuity_types": [],
+          "conditions_to_recheck_zh": "卵巢结构与正常颈部检查需要新证据；不可只按既往病例归因。",
+          "knowledge_needs_from_existing_annotations": []
+        }
+      }
+    },
+    {
+      "sequence": 31,
+      "question_id": "medqa-derived::A01",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "平均MCV正常时的混合性贫血与补铁后持续神经表现",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 58-year-old woman is evaluated for persistent fatigue and progressive difficulty walking in the dark. She has autoimmune thyroid disease and intermittently takes ibuprofen for arthritis. Hemoglobin is 8.8 g/dL, MCV 84 fL, RDW 25%, ferritin 6 ng/mL, and transferrin saturation 5%. A smear contains both hypochromic microcytes and macro-ovalocytes, with occasional hypersegmented neutrophils. Examination shows reduced vibration sense and proprioception in both feet. Serum vitamin B12 is 230 pg/mL (reference 200-900), folate is normal, and creatinine is 0.8 mg/dL. After four weeks of supervised iron replacement, hemoglobin increases to 10.1 g/dL, MCV rises to 101 fL, and the sensory findings persist. Which additional finding would best support the mechanism that was obscured by the initial average cell volume?",
+      "options": {
+        "A": "An elevated serum methylmalonic acid concentration",
+        "B": "A normal methylmalonic acid concentration with an isolated elevation of homocysteine",
+        "C": "A strongly positive direct antiglobulin test for IgG",
+        "D": "An elevated hepcidin concentration with preserved marrow iron stores"
+      },
+      "evaluation_only": {
+        "answer": "A",
+        "answer_text": "An elevated serum methylmalonic acid concentration",
+        "rationale_zh": "明确缺铁与混合涂片使平均MCV失去单独排除价值；补铁后显露大细胞倾向且感觉异常持续。肾功能正常时，MMA升高比孤立同型半胱氨酸升高更支持B12相关代谢障碍。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0900",
+            "medqa::1009",
+            "medqa::0409"
+          ],
+          "related_prior_sequences": [
+            1,
+            5,
+            6
+          ],
+          "relation_description_zh": "组合缺铁的铁代谢证据与大细胞性贫血、感觉异常的鉴别；平均MCV不能替代涂片和混合机制判断。",
+          "continuity_types": [
+            "multi_memory_combination",
+            "condition_recheck"
+          ],
+          "conditions_to_recheck_zh": "不能因初始MCV正常就排除B12缺乏，也不能因补铁有效就认为所有症状均由缺铁解释。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "组合缺铁的铁代谢证据与大细胞性贫血、感觉异常的鉴别；平均MCV不能替代涂片和混合机制判断。",
+              "candidate_sources": [
+                "medqa::0900",
+                "medqa::1009",
+                "medqa::0409"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "临界B12结果在肾功能正常时如何由代谢标志物进一步核实。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 32,
+      "question_id": "medqa-derived::A02",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "慢性炎症背景下新增失血与混合性贫血的判断",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 61-year-old woman with active rheumatoid arthritis has worsening exertional fatigue. Her medications include methotrexate with folate supplementation and frequent naproxen. Six months ago, hemoglobin was 10.7 g/dL, MCV 82 fL, ferritin 310 ng/mL, and transferrin saturation 17%. Hemoglobin is now 8.4 g/dL, MCV 72 fL, RDW 21%, reticulocytes 0.6%, ferritin 72 ng/mL, and transferrin saturation 5%. C-reactive protein remains markedly elevated. The soluble transferrin receptor is above this laboratory's reference range and the transferrin-receptor/ferritin index is elevated. There is no biochemical evidence of hemolysis. She has recently developed intermittent black stools. Which explanation best accounts for the change in her anemia?",
+      "options": {
+        "A": "Inflammatory iron sequestration alone, with unchanged total-body iron stores",
+        "B": "Absolute iron deficiency from blood loss superimposed on inflammatory iron restriction",
+        "C": "Methotrexate-induced isolated folate deficiency",
+        "D": "A new immune-mediated peripheral hemolytic process"
+      },
+      "evaluation_only": {
+        "answer": "B",
+        "answer_text": "Absolute iron deficiency from blood loss superimposed on inflammatory iron restriction",
+        "rationale_zh": "铁蛋白可受炎症影响；本题不是靠单一阈值下结论，而是失血、MCV与铁指标变化及sTfR相关指标共同支持合并绝对缺铁。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0394",
+            "medqa::0900",
+            "medqa-derived::A01"
+          ],
+          "related_prior_sequences": [
+            4,
+            1,
+            31
+          ],
+          "relation_description_zh": "复用炎症性贫血与绝对缺铁的对照，保留混合机制的可能性。",
+          "continuity_types": [
+            "partial_reuse",
+            "longitudinal_update"
+          ],
+          "conditions_to_recheck_zh": "不能把旧题的高铁蛋白规则当成任何炎症病例均不存在缺铁。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "复用炎症性贫血与绝对缺铁的对照，保留混合机制的可能性。",
+              "candidate_sources": [
+                "medqa::0394",
+                "medqa::0900",
+                "medqa-derived::A01"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "在持续炎症中结合时间趋势、失血及本实验室sTfR相关指标识别合并缺铁。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 33,
+      "question_id": "medqa-derived::A03",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "慢性溶血背景下感染后网织红细胞骤降的机制",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 15-year-old boy with chronic nonimmune hemolytic anemia usually has hemoglobin near 10.5 g/dL and a reticulocyte count of 8-10%. Previous testing showed spherocytes, reduced eosin-5-maleimide binding, and a negative direct antiglobulin test. He takes folic acid regularly. One week after a febrile illness that also affected younger children in his household, he develops marked pallor and tachycardia. Hemoglobin is 5.6 g/dL, MCV 86 fL, reticulocytes 0.1%, leukocytes 5,900/mm3, and platelets 245,000/mm3. Bilirubin is lower than during his usual hemolytic exacerbations. B12 and folate concentrations are adequate, and there has been no bleeding. Which process best explains this acute deterioration?",
+      "options": {
+        "A": "An acceleration of splenic destruction with an appropriately increased erythropoietic response",
+        "B": "A folate-deficient megaloblastic crisis caused by chronically increased erythrocyte turnover",
+        "C": "Transient infection-mediated arrest of erythroid precursor production",
+        "D": "New IgG-mediated destruction of mature erythrocytes"
+      },
+      "evaluation_only": {
+        "answer": "C",
+        "answer_text": "Transient infection-mediated arrest of erythroid precursor production",
+        "rationale_zh": "关键是相对个人基线的网织红细胞骤降，而非Hb低本身。该模式符合感染相关暂时性红系停滞；球形红细胞病患者对这种生成中断尤其敏感。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0476",
+            "medqa::0810",
+            "medqa::0673",
+            "medqa-derived::A01"
+          ],
+          "related_prior_sequences": [
+            7,
+            8,
+            9,
+            31
+          ],
+          "relation_description_zh": "复用遗传性球形红细胞病的非免疫溶血框架、叶酸需求及生成不足和外周破坏的区别。",
+          "continuity_types": [
+            "condition_reversal",
+            "partial_reuse"
+          ],
+          "conditions_to_recheck_zh": "不能将慢性溶血背景下每次Hb下降都解释为溶血加重，也不能机械复用补叶酸答案。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "复用遗传性球形红细胞病的非免疫溶血框架、叶酸需求及生成不足和外周破坏的区别。",
+              "candidate_sources": [
+                "medqa::0476",
+                "medqa::0810",
+                "medqa::0673",
+                "medqa-derived::A01"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "感染后选择性红系抑制、尤其细小病毒B19相关再障危象的证据。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 34,
+      "question_id": "medqa-derived::A04",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "相同球形红细胞形态下Coombs阳性带来的病因变化",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 47-year-old woman with an autoimmune connective-tissue disease develops jaundice and fatigue over three weeks. Hemoglobin is 7.7 g/dL, MCV 98 fL, reticulocytes 11%, indirect bilirubin 3.4 mg/dL, and haptoglobin is undetectable. The smear shows numerous small dense erythrocytes without central pallor. She has no childhood anemia, no family history of early gallstones or splenectomy, and no recent transfusion. The direct antiglobulin test is strongly positive for IgG but negative for C3. Which mechanism most directly produces the observed erythrocyte shape in this patient?",
+      "options": {
+        "A": "Partial removal of IgG-coated erythrocyte membrane by splenic macrophages",
+        "B": "Oxidant precipitation of hemoglobin followed by splenic removal of inclusions",
+        "C": "Inherited defective linkage between the membrane skeleton and lipid bilayer",
+        "D": "Intravascular terminal-complement lysis triggered primarily by cold-reactive IgM"
+      },
+      "evaluation_only": {
+        "answer": "A",
+        "answer_text": "Partial removal of IgG-coated erythrocyte membrane by splenic macrophages",
+        "rationale_zh": "获得性溶血加IgG阳性DAT支持温抗体相关过程。脾巨噬细胞经Fc受体识别并移除部分膜，形成球形细胞。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0476",
+            "medqa::0810",
+            "medqa-derived::A03"
+          ],
+          "related_prior_sequences": [
+            7,
+            8,
+            33
+          ],
+          "relation_description_zh": "复用球形细胞、胆红素、网织红细胞和DAT的联合鉴别，保留形态与病因分离。",
+          "continuity_types": [
+            "condition_reversal",
+            "negative_transfer_control"
+          ],
+          "conditions_to_recheck_zh": "形态相同不意味着继续采用遗传性膜缺陷的病因结论。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "复用球形细胞、胆红素、网织红细胞和DAT的联合鉴别，保留形态与病因分离。",
+              "candidate_sources": [
+                "medqa::0476",
+                "medqa::0810",
+                "medqa-derived::A03"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "温抗体介导的膜部分吞噬如何产生继发球形细胞。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 35,
+      "question_id": "medqa-derived::A05",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "裂红细胞伴低网织红细胞反应时的贫血机制鉴别",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 56-year-old man is admitted with severe fatigue, mild confusion, and numbness of both feet. Hemoglobin is 5.9 g/dL, MCV 91 fL, RDW 29%, platelets 68,000/mm3, and leukocytes 2,900/mm3. The smear contains schistocytes, macro-ovalocytes, and hypersegmented neutrophils. LDH is 7,800 U/L, haptoglobin is undetectable, and indirect bilirubin is 1.8 mg/dL. Reticulocytes are 0.7%, corresponding to a reticulocyte production index below 0.3. Creatinine is 0.9 mg/dL, coagulation studies are normal, and he has received no transfusions. B12 is 95 pg/mL, methylmalonic acid is markedly elevated, and ferritin is 8 ng/mL. Which mechanism best accounts for the apparent hemolysis and the disproportionately weak reticulocyte response?",
+      "options": {
+        "A": "Platelet-rich microvascular thrombosis with a preserved compensatory marrow response",
+        "B": "An isolated episode of occult blood loss with intact erythroid maturation",
+        "C": "Ineffective megaloblastic erythropoiesis with intramedullary destruction of developing cells",
+        "D": "Isolated splenic sequestration caused by an inherited erythrocyte membrane defect"
+      },
+      "evaluation_only": {
+        "answer": "C",
+        "answer_text": "Ineffective megaloblastic erythropoiesis with intramedullary destruction of developing cells",
+        "rationale_zh": "本例B12和MMA证据明确，伴多系减少、极高LDH及不适当低RPI，更符合无效造血和髓内破坏。合并缺铁解释平均MCV未明显升高。本题询问机制，不构成排除真实TTP的临床处置规则。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::1009",
+            "medqa::0409",
+            "medqa-derived::A01",
+            "medqa-derived::A03",
+            "medqa-derived::A04"
+          ],
+          "related_prior_sequences": [
+            5,
+            6,
+            31,
+            33,
+            34
+          ],
+          "relation_description_zh": "组合混合贫血可掩盖MCV、MMA鉴别及RPI区分生成不足与外周破坏的证据。",
+          "continuity_types": [
+            "multi_memory_combination",
+            "condition_reversal"
+          ],
+          "conditions_to_recheck_zh": "不能因见到裂红细胞就忽略生成不足，也不能因MCV正常排除巨幼细胞性机制。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "组合混合贫血可掩盖MCV、MMA鉴别及RPI区分生成不足与外周破坏的证据。",
+              "candidate_sources": [
+                "medqa::1009",
+                "medqa::0409",
+                "medqa-derived::A01",
+                "medqa-derived::A03",
+                "medqa-derived::A04"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "核实严重B12缺乏的假性血栓性微血管病模式；未有对应原文时补查。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 36,
+      "question_id": "medqa-derived::A06",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "脾切除后临床改善但球形红细胞持续存在的解释",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 19-year-old man with an established pathogenic ANK1 variant undergoes splenectomy for symptomatic chronic hemolysis. Before surgery, hemoglobin is 8.9 g/dL, reticulocytes 12%, and indirect bilirubin 3.1 mg/dL. Six months later, without transfusion, hemoglobin is 13.2 g/dL, reticulocytes 2.6%, and indirect bilirubin 0.8 mg/dL. The smear still contains spherocytes and now shows occasional Howell-Jolly bodies. The direct antiglobulin test remains negative. Which interpretation best reconciles the clinical improvement with the persistent erythrocyte morphology?",
+      "options": {
+        "A": "The original disorder was antibody-mediated, and splenectomy eliminated production of the pathogenic antibody",
+        "B": "Persistence of spherocytes establishes ongoing severe intravascular hemolysis despite the improved biochemical markers",
+        "C": "Splenectomy restores the missing erythrocyte membrane protein, so the remaining abnormal cells must be transfused donor cells",
+        "D": "Removal of the principal site of sequestration prolongs survival despite persistence of the intrinsic membrane defect"
+      },
+      "evaluation_only": {
+        "answer": "D",
+        "answer_text": "Removal of the principal site of sequestration prolongs survival despite persistence of the intrinsic membrane defect",
+        "rationale_zh": "临床改善来自减少脾内滞留和清除；遗传性膜缺陷仍在。Howell-Jolly小体与脾滤除功能缺失一致，不表示新的巨幼细胞性危象。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0476",
+            "medqa::0810",
+            "medqa::0673",
+            "medqa-derived::A03",
+            "medqa-derived::A04"
+          ],
+          "related_prior_sequences": [
+            7,
+            8,
+            9,
+            33,
+            34
+          ],
+          "relation_description_zh": "组合膜缺陷、脾清除与免疫性膜丢失的对照，区分病因、形态和疾病活动度。",
+          "continuity_types": [
+            "delayed_reuse",
+            "multi_memory_combination"
+          ],
+          "conditions_to_recheck_zh": "不能把异常形态仍存在等同于治疗失败，也不能把脾切除等同于修复膜蛋白。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "组合膜缺陷、脾清除与免疫性膜丢失的对照，区分病因、形态和疾病活动度。",
+              "candidate_sources": [
+                "medqa::0476",
+                "medqa::0810",
+                "medqa::0673",
+                "medqa-derived::A03",
+                "medqa-derived::A04"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "脾切除改善细胞存活但不纠正遗传缺陷的作用边界。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 37,
+      "question_id": "medqa-derived::A07",
+      "topic": "anemia",
+      "topic_zh": "贫血",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "B12指标正常时贫血与神经表现的其他营养和暴露机制",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 64-year-old man has eight months of fatigue, distal numbness, and progressive gait instability. Hemoglobin is 8.9 g/dL, MCV 95 fL, RDW 19%, and absolute neutrophil count 800/mm3. Platelets are normal. Ferritin is 280 ng/mL and transferrin saturation 28%. B12, methylmalonic acid, and folate are normal. An eight-week supervised iron course has not improved the anemia. Bone marrow examination shows vacuolated erythroid and granulocytic precursors with scattered ring sideroblasts, no excess blasts, and a normal karyotype. He uses large amounts of a zinc-containing denture adhesive and takes additional zinc supplements. Which mechanism best explains the combined hematologic and neurologic abnormalities?",
+      "options": {
+        "A": "Enterocyte metallothionein induction that preferentially retains copper, reducing systemic copper availability",
+        "B": "Autoimmune loss of intrinsic factor with impaired cobalamin absorption",
+        "C": "Failure to replace iron losses from chronic gastrointestinal bleeding",
+        "D": "Inflammation-induced hepcidin elevation as the sole cause of restricted iron delivery"
+      },
+      "evaluation_only": {
+        "answer": "A",
+        "answer_text": "Enterocyte metallothionein induction that preferentially retains copper, reducing systemic copper availability",
+        "rationale_zh": "锌过量可通过肠细胞金属硫蛋白增加造成铜滞留和丢失；铜不足可同时造成贫血、中性粒细胞减少、前体细胞空泡及脊髓神经表现。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0900",
+            "medqa::1009",
+            "medqa::0409",
+            "medqa-derived::A01",
+            "medqa-derived::A05"
+          ],
+          "related_prior_sequences": [
+            1,
+            5,
+            6,
+            31,
+            35
+          ],
+          "relation_description_zh": "复用补铁反应、铁代谢和B12代谢标志物对营养性贫血的排查；避免仅按神经表现复制旧病因。",
+          "continuity_types": [
+            "delayed_reuse",
+            "negative_transfer_control"
+          ],
+          "conditions_to_recheck_zh": "不能把所有贫血加感觉异常都归为B12缺乏，也不能仅凭环形铁粒幼细胞认定单一骨髓克隆疾病。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "复用补铁反应、铁代谢和B12代谢标志物对营养性贫血的排查；避免仅按神经表现复制旧病因。",
+              "candidate_sources": [
+                "medqa::0900",
+                "medqa::1009",
+                "medqa::0409",
+                "medqa-derived::A01",
+                "medqa-derived::A05"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "锌相关铜吸收受阻及其骨髓和神经表型。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 38,
+      "question_id": "medqa-derived::R01",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "肾病综合征与新发肾静脉血栓的机制关联",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 24-year-old man has persistent edema and 8.2 g of urinary protein per day. Serum albumin is 1.6 g/dL and creatinine was previously 0.9 mg/dL. A prior kidney biopsy showed diffuse podocyte foot-process effacement without immune deposits. He now develops abrupt left flank pain, visible hematuria, and a rise in creatinine to 1.7 mg/dL. Urine contains predominantly isomorphic erythrocytes without erythrocyte casts. Doppler and contrast imaging demonstrate a new left renal-vein thrombus. He has no previous thrombosis, no family history of thrombosis, and no malignancy. Which acquired change most directly links his pre-existing renal disease to the new complication?",
+      "options": {
+        "A": "Loss of circulating fibrinogen leading to impaired fibrin formation",
+        "B": "New antibodies directed against glomerular basement membrane collagen",
+        "C": "Immune-complex activation of glomerular complement as the sole cause of the hematuria",
+        "D": "Urinary loss of antithrombin contributing to reduced endogenous anticoagulant activity"
+      },
+      "evaluation_only": {
+        "answer": "D",
+        "answer_text": "Urinary loss of antithrombin contributing to reduced endogenous anticoagulant activity",
+        "rationale_zh": "已证实的肾病综合征可造成获得性促凝状态，抗凝蛋白丢失是机制之一。血栓已由影像确诊，题目要求解释它与先前蛋白丢失的联系。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0574",
+            "medqa::0145",
+            "medqa::0697",
+            "medqa::1094"
+          ],
+          "related_prior_sequences": [
+            11,
+            12,
+            15,
+            20
+          ],
+          "relation_description_zh": "复用大量蛋白尿、低白蛋白与足突病变的证据；用尿沉渣定位避免把血尿一概归入肾小球炎。",
+          "continuity_types": [
+            "partial_reuse",
+            "condition_reversal"
+          ],
+          "conditions_to_recheck_zh": "不能因新出现血尿就套用抗GBM或感染后肾炎的病因。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "复用大量蛋白尿、低白蛋白与足突病变的证据；用尿沉渣定位避免把血尿一概归入肾小球炎。",
+              "candidate_sources": [
+                "medqa::0574",
+                "medqa::0145",
+                "medqa::0697",
+                "medqa::1094"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "尿中抗凝蛋白丢失如何增加肾静脉血栓风险。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 39,
+      "question_id": "medqa-derived::R02",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "感染后持续低C3与补体异常机制的重新判断",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 17-year-old boy developed edema, cola-colored urine, erythrocyte casts, and low serum C3 two weeks after pharyngitis. An antistreptolysin O titer was elevated, and he initially improved with supportive care. Fourteen weeks later, microscopic hematuria and a urine protein/creatinine ratio of 1.8 g/g persist. C3 remains markedly low, whereas C4 is normal. Kidney biopsy shows dominant C3 staining with only trace immunoglobulin. Electron microscopy reveals ribbon-like, highly electron-dense intramembranous deposits. A circulating antibody is found that stabilizes an alternative-pathway convertase. Which effect best explains the persistent complement abnormality?",
+      "options": {
+        "A": "Stabilization of C4b2a as the primary sustained event",
+        "B": "Prolongation of C3bBb activity with continuing alternative-pathway C3 consumption",
+        "C": "Direct antibody binding to the alpha-3 chain of type IV collagen",
+        "D": "Selective loss of basement-membrane charge without complement activation"
+      },
+      "evaluation_only": {
+        "answer": "B",
+        "answer_text": "Prolongation of C3bBb activity with continuing alternative-pathway C3 consumption",
+        "rationale_zh": "持续异常和C3主导病理要求重新评价补体失调。C3肾炎因子可稳定C3bBb，使替代途径持续活化；题目没有把单次低C3当成诊断充分条件。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0169",
+            "medqa::0533",
+            "medqa::0574"
+          ],
+          "related_prior_sequences": [
+            13,
+            14,
+            11
+          ],
+          "relation_description_zh": "组合感染后肾炎的时间线与C3肾炎因子、沉积物的证据，重新核对恢复过程。",
+          "continuity_types": [
+            "longitudinal_update",
+            "multi_memory_combination"
+          ],
+          "conditions_to_recheck_zh": "既往ASO阳性并不保证后续持续异常仍能由自限性感染后过程充分解释。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "组合感染后肾炎的时间线与C3肾炎因子、沉积物的证据，重新核对恢复过程。",
+              "candidate_sources": [
+                "medqa::0169",
+                "medqa::0533",
+                "medqa::0574"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "持续低C3超出典型恢复窗口时，核实替代途径C3转化酶稳定化机制。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 40,
+      "question_id": "medqa-derived::R03",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "PTU暴露与肺肾表现、MPO抗体及寡免疫病理的组合判断",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 34-year-old woman with Graves disease has taken propylthiouracil for 20 months. She develops purpuric lesions, dyspnea, and hemoptysis. Creatinine has risen from 0.8 to 2.9 mg/dL, and urine contains dysmorphic erythrocytes and erythrocyte casts. Bronchoalveolar lavage becomes progressively bloodier. Anti-myeloperoxidase antibodies are strongly positive; anti-GBM antibodies and antinuclear antibodies are negative. C3 and C4 are normal. Kidney biopsy shows focal necrosis and cellular crescents, with little or no immunoglobulin or complement staining on immunofluorescence. Which mechanism best fits this combination of exposure, serology, and pathology?",
+      "options": {
+        "A": "Persistent stabilization of the alternative-pathway C3 convertase",
+        "B": "Drug-associated neutrophil-directed autoimmunity causing pauci-immune small-vessel injury",
+        "C": "Antibodies binding continuously along glomerular and alveolar basement membranes",
+        "D": "Analgesic-mediated medullary ischemia with sloughing of renal papillae"
+      },
+      "evaluation_only": {
+        "answer": "B",
+        "answer_text": "Drug-associated neutrophil-directed autoimmunity causing pauci-immune small-vessel injury",
+        "rationale_zh": "现有三类证据相互支持：长期PTU暴露、MPO阳性以及寡免疫坏死性新月体肾炎。正常补体与缺少线状沉积进一步限制旧病因的适用。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0697",
+            "medqa::0162",
+            "medqa::0089",
+            "medqa::0512",
+            "medqa-derived::R02"
+          ],
+          "related_prior_sequences": [
+            15,
+            16,
+            23,
+            24,
+            39
+          ],
+          "relation_description_zh": "复用肺肾综合征的定位和免疫荧光对照，以及抗甲状腺药物暴露的记录。",
+          "continuity_types": [
+            "multi_memory_combination",
+            "negative_transfer_control"
+          ],
+          "conditions_to_recheck_zh": "不能把肺出血加红细胞管型直接等同于抗GBM病，也不能因旧题PTU适用就忽略新的药物损伤。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "复用肺肾综合征的定位和免疫荧光对照，以及抗甲状腺药物暴露的记录。",
+              "candidate_sources": [
+                "medqa::0697",
+                "medqa::0162",
+                "medqa::0089",
+                "medqa::0512",
+                "medqa-derived::R02"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "PTU与MPO-ANCA相关血管炎及寡免疫肾损伤的联系。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 41,
+      "question_id": "medqa-derived::R04",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "感染同步血尿、正常补体与肾活检表现的关联",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 23-year-old man has had three episodes of visible hematuria during the past year. Each begins within 24 hours of sore throat or nasal congestion and resolves over several days. He has taken ibuprofen during each respiratory illness. Between episodes, urine still contains dysmorphic erythrocytes and occasional erythrocyte casts. Current urine protein/creatinine ratio is 0.9 g/g, serum albumin 4.0 g/dL, and creatinine 1.1 mg/dL. C3 and C4 have remained normal on repeated measurements. There is no hearing loss, purpura, or abdominal pain. Which kidney-biopsy finding would best account for the recurrent pattern?",
+      "options": {
+        "A": "Coagulative necrosis of renal papillae without glomerular immune deposits",
+        "B": "Dominant mesangial IgA deposition, often accompanied by C3",
+        "C": "Strong linear IgG staining along glomerular basement membranes",
+        "D": "Dominant intramembranous C3 deposits with minimal immunoglobulin"
+      },
+      "evaluation_only": {
+        "answer": "B",
+        "answer_text": "Dominant mesangial IgA deposition, often accompanied by C3",
+        "rationale_zh": "反复同步血尿、正常补体与肾小球性尿沉渣组合更符合IgA肾病；药物史单独不能推翻定位证据。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0169",
+            "medqa::0465",
+            "medqa::0216",
+            "medqa-derived::R02",
+            "medqa-derived::R03"
+          ],
+          "related_prior_sequences": [
+            13,
+            17,
+            18,
+            39,
+            40
+          ],
+          "relation_description_zh": "复用血尿定位、感染与发病间隔、补体和免疫荧光的鉴别框架。",
+          "continuity_types": [
+            "condition_reversal",
+            "multi_memory_combination"
+          ],
+          "conditions_to_recheck_zh": "不能因有NSAID史就诊断乳头坏死，也不能因有咽痛就照搬延迟出现的感染后肾炎。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "复用血尿定位、感染与发病间隔、补体和免疫荧光的鉴别框架。",
+              "candidate_sources": [
+                "medqa::0169",
+                "medqa::0465",
+                "medqa::0216",
+                "medqa-derived::R02",
+                "medqa-derived::R03"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "同步性反复血尿与IgA优势系膜沉积的关联。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 42,
+      "question_id": "medqa-derived::R05",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "总尿蛋白显著升高而试纸弱阳性的检测差异",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 69-year-old man with progressive back pain and fatigue has hemoglobin 9.4 g/dL, creatinine 2.3 mg/dL, calcium 11.8 mg/dL, and serum albumin 3.5 g/dL. Skeletal imaging shows several lytic lesions. An adequately collected 24-hour urine sample contains 3.6 g of total protein, but only 0.18 g is albumin. The routine urine dipstick shows trace protein, while a sulfosalicylic acid precipitation test is strongly positive. Urine microscopy shows no dysmorphic erythrocytes or erythrocyte casts. Which explanation best reconciles the quantitative protein measurement with the weak dipstick result?",
+      "options": {
+        "A": "Filtered monoclonal light chains exceed proximal reabsorptive capacity, while the dipstick preferentially detects albumin",
+        "B": "Transient orthostatic proteinuria with otherwise normal protein composition",
+        "C": "Selective glomerular albumin leakage due to isolated podocyte injury",
+        "D": "A dipstick false negative caused solely by severe hypoalbuminemia"
+      },
+      "evaluation_only": {
+        "answer": "A",
+        "answer_text": "Filtered monoclonal light chains exceed proximal reabsorptive capacity, while the dipstick preferentially detects albumin",
+        "rationale_zh": "骨痛、高钙、贫血及非白蛋白为主的大量尿蛋白支持单克隆轻链溢出。弱试纸与强总蛋白检测并不矛盾，因为试纸主要检测白蛋白。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::1153",
+            "medqa::0574",
+            "medqa::0145",
+            "medqa-derived::R01"
+          ],
+          "related_prior_sequences": [
+            19,
+            11,
+            12,
+            38
+          ],
+          "relation_description_zh": "复用浆细胞相关溢出性蛋白尿与白蛋白为主的肾病综合征对照。",
+          "continuity_types": [
+            "delayed_reuse",
+            "multi_memory_combination"
+          ],
+          "conditions_to_recheck_zh": "不能仅因总蛋白达到肾病范围就套用足突/电荷屏障机制。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "复用浆细胞相关溢出性蛋白尿与白蛋白为主的肾病综合征对照。",
+              "candidate_sources": [
+                "medqa::1153",
+                "medqa::0574",
+                "medqa::0145",
+                "medqa-derived::R01"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "尿试纸检测偏好与总蛋白、白蛋白分量不一致时的解释。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 43,
+      "question_id": "medqa-derived::R06",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "单克隆蛋白背景下白蛋白为主的蛋白尿与沉积分型",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 67-year-old woman with a small lambda-restricted plasma-cell clone develops progressive edema and orthostatic dizziness. Creatinine is 1.8 mg/dL and serum albumin is 1.9 g/dL. Her 24-hour urine contains 6.4 g of protein, of which 5.7 g is albumin. Urine dipstick is 4+ positive, without erythrocyte casts. Kidney biopsy shows extracellular material expanding the mesangium and capillary walls. Electron microscopy reveals randomly arranged, nonbranching fibrils measuring approximately 9-11 nm. Which additional pathologic result would most strongly support the mechanism of her renal disease?",
+      "options": {
+        "A": "Predominantly distal tubular fractured light-chain casts without glomerular deposits",
+        "B": "Diffuse podocyte effacement as the only abnormality, without extracellular deposits",
+        "C": "Congo-red-positive glomerular deposits with apple-green birefringence and light-chain-derived fibril typing",
+        "D": "Granular IgG and C3 deposits containing large subepithelial immune-complex humps"
+      },
+      "evaluation_only": {
+        "answer": "C",
+        "answer_text": "Congo-red-positive glomerular deposits with apple-green birefringence and light-chain-derived fibril typing",
+        "rationale_zh": "大量白蛋白尿定位于肾小球损伤，指定纤维形态支持淀粉样沉积。刚果红、偏振表现及沉积物分型共同支持轻链来源；仅有浆细胞克隆本身仍不足以完成分型。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::1153",
+            "medqa::1094",
+            "medqa-derived::R01",
+            "medqa-derived::R05"
+          ],
+          "related_prior_sequences": [
+            19,
+            20,
+            38,
+            42
+          ],
+          "relation_description_zh": "复用单克隆蛋白背景及蛋白尿成分定位，区分轻链溢出、肾小管损伤与肾小球病变。",
+          "continuity_types": [
+            "condition_reversal",
+            "multi_memory_combination"
+          ],
+          "conditions_to_recheck_zh": "相同浆细胞背景不意味着每次蛋白尿都来自轻链铸型或都以非白蛋白为主。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "复用单克隆蛋白背景及蛋白尿成分定位，区分轻链溢出、肾小管损伤与肾小球病变。",
+              "candidate_sources": [
+                "medqa::1153",
+                "medqa::1094",
+                "medqa-derived::R01",
+                "medqa-derived::R05"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "纤维性肾小球沉积的染色和蛋白分型；不能仅凭存在单克隆克隆自动确定所有沉积类型。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 44,
+      "question_id": "medqa-derived::R07",
+      "topic": "renal",
+      "topic_zh": "肾脏",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "NSAID暴露后大量蛋白尿与肾损伤的病理组合",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 42-year-old woman began taking naproxen daily six weeks ago for chronic shoulder pain. She now has edema, a 7-kg weight gain, and reduced urine output. Creatinine has increased from 0.8 to 3.2 mg/dL, serum albumin is 1.8 g/dL, and 24-hour urine contains 7.9 g of protein, predominantly albumin. Urine has 3-5 leukocytes per high-power field but no erythrocyte casts. She has no fever, rash, peripheral eosinophilia, flank colic, or gross hematuria. Complement concentrations are normal. Ultrasonography excludes obstruction. Which combination of biopsy abnormalities would best explain the renal presentation?",
+      "options": {
+        "A": "Isolated mesangial IgA deposits with no tubulointerstitial or podocyte injury",
+        "B": "Linear IgG deposition with widespread glomerular crescents",
+        "C": "Interstitial inflammatory-cell infiltration together with diffuse podocyte foot-process effacement",
+        "D": "Necrotic sloughed papillae with otherwise intact glomerular filtration structures"
+      },
+      "evaluation_only": {
+        "answer": "C",
+        "answer_text": "Interstitial inflammatory-cell infiltration together with diffuse podocyte foot-process effacement",
+        "rationale_zh": "NSAID相关间质性肾炎可伴足突病变和明显肾病综合征，且常缺乏典型全身过敏表现；两处损伤可共同解释本题，而单一乳头病变不足。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0145",
+            "medqa::1094",
+            "medqa::0465",
+            "medqa::0216",
+            "medqa-derived::R01",
+            "medqa-derived::R06"
+          ],
+          "related_prior_sequences": [
+            12,
+            20,
+            17,
+            18,
+            38,
+            43
+          ],
+          "relation_description_zh": "复用白蛋白尿/足突损伤及镇痛药肾损伤的对照，先区分定位再判断病因。",
+          "continuity_types": [
+            "multi_memory_combination",
+            "negative_transfer_control"
+          ],
+          "conditions_to_recheck_zh": "不能把所有NSAID相关肾损伤都视为乳头坏死，也不能因无皮疹/嗜酸细胞增加就排除该类间质损伤。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "复用白蛋白尿/足突损伤及镇痛药肾损伤的对照，先区分定位再判断病因。",
+              "candidate_sources": [
+                "medqa::0145",
+                "medqa::1094",
+                "medqa::0465",
+                "medqa::0216",
+                "medqa-derived::R01",
+                "medqa-derived::R06"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "NSAID相关间质性肾炎伴微小病变可缺少常见药物过敏表现。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 45,
+      "question_id": "medqa-derived::T01",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "母体药物与抗体作用持续时间不同引起的新生儿延迟发病",
+      "key_cues_from_existing_annotations": [],
+      "question": "A term infant is born to a woman with Graves disease who required propylthiouracil during the third trimester. Maternal TSH-receptor antibodies were markedly elevated late in pregnancy. Cord free T4 is within the neonatal laboratory's reference interval, and the infant initially feeds normally. On day 8 he develops persistent tachycardia, sweating, frequent stools, and poor weight gain. Repeat testing shows suppressed TSH and free T4 above the age-specific reference interval; infant TSH-receptor antibodies are positive. He receives methimazole and symptomatic therapy. Which relationship best explains both the initially reassuring hormone measurement and the subsequent development of thyrotoxicosis?",
+      "options": {
+        "A": "A normal cord free T4 rules out antibody-related disease, so the later findings require a new neonatal autoimmune disorder",
+        "B": "Transplacental antithyroid drug activity wanes before the stimulatory effect of maternally transferred IgG disappears",
+        "C": "Maternal IgM initially suppresses the fetal thyroid and then crosses the placenta after delivery",
+        "D": "Maternal levothyroxine causes a delayed and permanently self-sustaining neonatal hormone excess"
+      },
+      "evaluation_only": {
+        "answer": "B",
+        "answer_text": "Transplacental antithyroid drug activity wanes before the stimulatory effect of maternally transferred IgG disappears",
+        "rationale_zh": "母体抗甲状腺药与刺激性IgG可同时影响新生儿。药物效应消退后，仍存在的刺激性抗体可使甲亢显露；出生时正常的单次激素结果并不充分排除。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0067",
+            "medqa::0361",
+            "medqa::0089"
+          ],
+          "related_prior_sequences": [
+            21,
+            22,
+            23
+          ],
+          "relation_description_zh": "组合母体抗体与新生儿处理框架，同时区分母体用药效应和抗体效应。",
+          "continuity_types": [
+            "longitudinal_update",
+            "multi_memory_combination"
+          ],
+          "conditions_to_recheck_zh": "不能因母体接受治疗或出生时激素正常就认为新生儿不再受刺激性抗体影响。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "组合母体抗体与新生儿处理框架，同时区分母体用药效应和抗体效应。",
+              "candidate_sources": [
+                "medqa::0067",
+                "medqa::0361",
+                "medqa::0089"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "不同作用持续时间如何解释正常初始检查后的延迟发病。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 46,
+      "question_id": "medqa-derived::T02",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "持续抗体阴性且家族聚集的婴儿甲亢机制",
+      "key_cues_from_existing_annotations": [],
+      "question": "An 8-month-old boy has required continuous antithyroid treatment since the first weeks of life. During two carefully monitored dose reductions, free T4 rises again despite persistently suppressed TSH. The thyroid is diffusely enlarged. TSH-receptor antibodies were undetectable in cord blood and remain undetectable in both infant and mother on repeated testing. His mother has no thyroid disease. His father and paternal aunt both developed hyperthyroidism in early childhood without orbitopathy or detectable TSH-receptor antibodies. The child has no cafe-au-lait lesions or skeletal abnormalities. Which mechanism best accounts for this course?",
+      "options": {
+        "A": "Transient escape from an iodine-induced block of neonatal thyroid synthesis",
+        "B": "A germline inactivating variant of the TSH receptor causing reduced receptor signaling",
+        "C": "Prolonged stimulation by maternally transferred receptor antibodies",
+        "D": "A germline activating variant of the TSH receptor producing constitutive thyroid stimulation"
+      },
+      "evaluation_only": {
+        "answer": "D",
+        "answer_text": "A germline activating variant of the TSH receptor producing constitutive thyroid stimulation",
+        "rationale_zh": "父系家族聚集、持续复发和反复抗体阴性支持遗传性非自身免疫性甲亢。激活性TSHR变异可产生与TSH无关的信号。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0067",
+            "medqa::0124",
+            "medqa-derived::T01"
+          ],
+          "related_prior_sequences": [
+            21,
+            28,
+            45
+          ],
+          "relation_description_zh": "复用经胎盘刺激性抗体效应的时间边界及先天受体功能异常与功能状态的关系。",
+          "continuity_types": [
+            "condition_reversal",
+            "negative_transfer_control"
+          ],
+          "conditions_to_recheck_zh": "不能把所有新生儿起病甲亢都归于母体Graves；此处无母体抗体的证据且病程超出暂时性模式。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "复用经胎盘刺激性抗体效应的时间边界及先天受体功能异常与功能状态的关系。",
+              "candidate_sources": [
+                "medqa::0067",
+                "medqa::0124",
+                "medqa-derived::T01"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "持续、抗体阴性且父系聚集的甲亢所提示的构成性受体激活。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 47,
+      "question_id": "medqa-derived::T03",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "孕早期PTU用药后发热与粒细胞缺乏的安全处理",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 29-year-old woman at 11 weeks of gestation has Graves disease. She was switched from methimazole to propylthiouracil five weeks ago. She now presents with fever of 39.2 degrees C, a painful sore throat, and several oral ulcers. Heart rate is 106/min, blood pressure 114/72 mm Hg, and she is alert. Free T4 is only mildly above the pregnancy-specific reference interval, and liver tests are normal. Leukocyte count is 900/mm3 with an absolute neutrophil count of 70/mm3. She has not received chemotherapy or another marrow-toxic medication. Which immediate strategy is most appropriate?",
+      "options": {
+        "A": "Administer radioactive iodine now to eliminate the need for medication during pregnancy",
+        "B": "Immediately substitute methimazole because ongoing pregnancy makes uninterrupted thionamide therapy mandatory",
+        "C": "Continue propylthiouracil while repeating the blood count in one week",
+        "D": "Stop propylthiouracil and begin urgent evaluation and empiric antimicrobial management for febrile agranulocytosis"
+      },
+      "evaluation_only": {
+        "answer": "D",
+        "answer_text": "Stop propylthiouracil and begin urgent evaluation and empiric antimicrobial management for febrile agranulocytosis",
+        "rationale_zh": "ANC 70伴发热和咽部症状构成紧急风险，需停止疑似致病药并按发热性粒细胞缺乏处理。孕期常规换药策略不能凌驾于重大药物不良反应。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0089",
+            "medqa::0512",
+            "medqa::1061",
+            "medqa-derived::R03"
+          ],
+          "related_prior_sequences": [
+            23,
+            24,
+            26,
+            40
+          ],
+          "relation_description_zh": "复用孕期治疗边界及PTU重大不良反应需重审适用性的经验；区分发热的原因。",
+          "continuity_types": [
+            "condition_reversal",
+            "multi_memory_combination"
+          ],
+          "conditions_to_recheck_zh": "不能因早孕时PTU曾是合适选择就继续使用，也不能把所有发热和心动过速当作甲状腺危象。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "复用孕期治疗边界及PTU重大不良反应需重审适用性的经验；区分发热的原因。",
+              "candidate_sources": [
+                "medqa::0089",
+                "medqa::0512",
+                "medqa::1061",
+                "medqa-derived::R03"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "发热性粒细胞缺乏的紧急药物安全处理及同类药替换限制。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 48,
+      "question_id": "medqa-derived::T04",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "产后双相甲状腺功能变化与合成抑制药靶点的关系",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 32-year-old woman develops palpitations and heat intolerance eight weeks after delivery. She is breastfeeding and has never used thyroid medication. TSH is suppressed and free T4 is elevated. Thyroid-peroxidase antibodies are positive, TSH-receptor antibodies are negative, and Doppler ultrasonography shows low thyroid blood flow. There is no thyroid bruit or orbitopathy. Without antithyroid medication, the palpitations resolve. Ten weeks later she develops constipation and fatigue, with free T4 below the reference interval and TSH 16 mIU/L. Which explanation best accounts for why methimazole would not have targeted the primary abnormality during the initial phase?",
+      "options": {
+        "A": "The initial hormone excess resulted predominantly from release of stored hormone from injured follicles rather than increased synthesis",
+        "B": "The initial excess was produced solely by accelerated peripheral T4-to-T3 conversion with no thyroid injury",
+        "C": "The initial excess was sustained by receptor-antibody-driven synthesis that is intrinsically resistant to methimazole",
+        "D": "Persistently elevated placental hCG remained the dominant stimulus throughout both postpartum phases"
+      },
+      "evaluation_only": {
+        "answer": "A",
+        "answer_text": "The initial hormone excess resulted predominantly from release of stored hormone from injured follicles rather than increased synthesis",
+        "rationale_zh": "低血流、TRAb阴性及自行由毒症转为低功能共同支持破坏性激素释放；抑制新合成不能直接阻断已经储存激素的释放。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0089",
+            "medqa::0137",
+            "medqa::0229",
+            "medqa-derived::T01"
+          ],
+          "related_prior_sequences": [
+            23,
+            25,
+            29,
+            45
+          ],
+          "relation_description_zh": "复用甲状腺毒症不等于某一固定病因的框架，重新评估抗体及合成抑制药的靶点。",
+          "continuity_types": [
+            "longitudinal_update",
+            "condition_reversal"
+          ],
+          "conditions_to_recheck_zh": "不能因存在甲状腺毒症就自动复用Graves的合成抑制方案。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "复用甲状腺毒症不等于某一固定病因的框架，重新评估抗体及合成抑制药的靶点。",
+              "candidate_sources": [
+                "medqa::0089",
+                "medqa::0137",
+                "medqa::0229",
+                "medqa-derived::T01"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "产后破坏性过程的低血流、抗体及双相病程证据。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 49,
+      "question_id": "medqa-derived::T05",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "垂体损伤背景下甲状腺与肾上腺激素补充的先后顺序",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 54-year-old man with previous surgery and radiotherapy for a pituitary macroadenoma is brought in with hypothermia and confusion after a respiratory infection. He stopped attending endocrine follow-up two years ago and takes no hormone replacement. Temperature is 34.0 degrees C, pulse 46/min, and blood pressure 78/46 mm Hg. Sodium is 121 mEq/L, glucose 48 mg/dL, free T4 0.22 ng/dL (reference 0.8-1.8), and TSH 1.4 mIU/L (reference 0.4-4.5). An 08:00 cortisol sample obtained before treatment is 1.6 micrograms/dL, with a low ACTH concentration. Airway support, cautious fluids, dextrose, and infection evaluation have begun. Which hormone-treatment sequence most appropriately addresses the immediate risk?",
+      "options": {
+        "A": "Withhold both hormones because a reference-range TSH establishes nonthyroidal illness",
+        "B": "Give levothyroxine alone and reassess the cortisol deficiency after thyroid indices normalize",
+        "C": "Give intravenous hydrocortisone before or with initiation of intravenous levothyroxine",
+        "D": "Give fludrocortisone alone because the low sodium proves isolated mineralocorticoid deficiency"
+      },
+      "evaluation_only": {
+        "answer": "C",
+        "answer_text": "Give intravenous hydrocortisone before or with initiation of intravenous levothyroxine",
+        "rationale_zh": "极低FT4伴不适当正常TSH及垂体病史支持中枢性功能不足。严重低皮质醇与休克要求先给予应激糖皮质激素覆盖，再启动或同时启动甲状腺激素。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0103",
+            "medqa::0229",
+            "medqa-derived::T04"
+          ],
+          "related_prior_sequences": [
+            27,
+            29,
+            48
+          ],
+          "relation_description_zh": "复用严重低功能与非甲状腺疾病综合征的对照，按病程及FT4/TSH适当性而非TSH是否超参考区间判断。",
+          "continuity_types": [
+            "multi_memory_combination",
+            "condition_reversal"
+          ],
+          "conditions_to_recheck_zh": "不能把旧重症病例的正常TSH和低T3结论泛化到有明确垂体损伤及严重低FT4/低皮质醇的新病例。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "复用严重低功能与非甲状腺疾病综合征的对照，按病程及FT4/TSH适当性而非TSH是否超参考区间判断。",
+              "candidate_sources": [
+                "medqa::0103",
+                "medqa::0229",
+                "medqa-derived::T04"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "垂体多轴不足时甲状腺激素与糖皮质激素的安全给药顺序。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sequence": 50,
+      "question_id": "medqa-derived::T06",
+      "topic": "thyroid",
+      "topic_zh": "甲状腺",
+      "source_type": "project_authored_medqa_style",
+      "source_description_zh": "本项目原创MedQA风格衍生题，非官方MedQA题",
+      "task_focus_zh": "颈部低摄取伴盆腔肿块时的激素来源定位",
+      "key_cues_from_existing_annotations": [],
+      "question": "A 38-year-old woman has persistent palpitations, weight loss, and intermittent right pelvic discomfort. TSH is below 0.01 mIU/L and free T4 remains elevated on repeated testing over four months. TSH-receptor antibodies are negative. She is not pregnant or postpartum and has had no recent iodinated contrast, amiodarone, or prescribed thyroid hormone. She does use an over-the-counter product marketed for thyroid support. Serum thyroglobulin is elevated, with negative thyroglobulin antibodies. Neck ultrasonography shows a small, otherwise unremarkable thyroid, and 24-hour cervical radioiodine uptake is 0.4%. Pelvic ultrasonography reveals a 6-cm complex right adnexal mass. Which additional finding would most specifically establish an endogenous source of her persistent hormone excess?",
+      "options": {
+        "A": "Low thyroid blood flow on Doppler imaging of the neck",
+        "B": "A positive thyroid-peroxidase antibody result by itself",
+        "C": "Suppression of pituitary TSH during symptomatic episodes",
+        "D": "Focal radionuclide uptake within the adnexal mass on whole-body scintigraphy"
+      },
+      "evaluation_only": {
+        "answer": "D",
+        "answer_text": "Focal radionuclide uptake within the adnexal mass on whole-body scintigraphy",
+        "rationale_zh": "颈部低摄取可有多种病因；在本例临床背景下，附件肿块内功能性核素摄取最直接定位内源性激素来源。球蛋白升高是支持线索，不单独作为定位依据。",
+        "candidate_continuity": {
+          "status": "candidate_knowledge_reuse_not_observed_execution",
+          "related_prior_question_ids": [
+            "medqa::0396",
+            "medqa::0137",
+            "medqa-derived::T04",
+            "medqa-derived::T05"
+          ],
+          "related_prior_sequences": [
+            30,
+            25,
+            48,
+            49
+          ],
+          "relation_description_zh": "组合颈部检查与功能状态分离、低摄取病因及异位甲状腺组织的索引。",
+          "continuity_types": [
+            "delayed_reuse",
+            "multi_memory_combination"
+          ],
+          "conditions_to_recheck_zh": "不能把低颈部摄取自动等同于甲状腺炎，也不能因补充剂暴露就忽略内源性异位来源。",
+          "knowledge_needs_from_existing_annotations": [
+            {
+              "id": "N1",
+              "goal_zh": "组合颈部检查与功能状态分离、低摄取病因及异位甲状腺组织的索引。",
+              "candidate_sources": [
+                "medqa::0396",
+                "medqa::0137",
+                "medqa-derived::T04",
+                "medqa-derived::T05"
+              ],
+              "status": "reuse_only_if_actual_stored_evidence_covers_current_scope"
+            },
+            {
+              "id": "N2",
+              "goal_zh": "全身核素定位与甲状腺球蛋白的来源鉴别价值；仅颈部摄取低不能完成定位。",
+              "status": "look_up_if_not_already_covered"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "provenance": [
+    {
+      "path": "experiments/datasets/medical-related-50-v2/questions.jsonl",
+      "sha256": "8f5683773db415fe8eaebf6ac71d23faf1158d48f85dea34c8191c71dffeab04"
+    },
+    {
+      "path": "experiments/datasets/medical-related-50-v2/order.json",
+      "sha256": "f2e7202e78f2c65b51c1cd0a5e1d25838d8a77033e7da60cd58f083d7d63d246"
+    },
+    {
+      "path": "experiments/datasets/medical-related-50-v2/evaluation/answers.json",
+      "sha256": "540690e175011d5aa7776349603bfd215d78c1ce68ea1c2827dda83f90b8e271"
+    },
+    {
+      "path": "experiments/datasets/medical-related-50-v2/evaluation/reuse-review.json",
+      "sha256": "e4c128e3d5fd7d9f3c650ba6dcaf413b8310e9ea082f50c5af2aa0f5f2f29346"
+    },
+    {
+      "path": "experiments/datasets/medical-related-30-v1/evaluation/reuse-review.json",
+      "sha256": "7943db2243985a93910da6614311e11e9525b1881c37163ead833404eb774d5c"
+    }
+  ]
+}

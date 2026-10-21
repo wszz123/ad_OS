@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>研发—运维闭环 · Coop Control Room</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/assets/devops.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block"><div class="brand-mark">CM</div><div><p class="eyebrow">RELATED TASK SEQUENCES</p><h1>研发—运维协作闭环</h1></div></div>
+      <div class="top-status"><a class="ghost-button workflow-link" href="/">成本任务</a><span id="engine-status">连接本地引擎…</span></div>
+    </header>
+    <main class="devops-main">
+      <section class="panel experiment-controls" aria-labelledby="experiment-heading">
+        <div><p class="section-kicker">01 / EXPERIMENT</p><h2 id="experiment-heading">同一个项目，两条任务链</h2>
+          <p class="muted">运维产出配置与日志证据，研发进行跨模块修复。新版覆盖租户隔离、游标、缓存、动态策略与幂等批量更新。</p></div>
+        <form id="experiment-form">
+          <div class="experiment-fields">
+            <label>任务环境<select id="workload"><option value="project">V2 · 多文件有状态项目</option><option value="service">V1 · 单函数机制练习</option></select></label>
+            <label>决策后端<select id="backend"><option value="fixture">Fixture · 脚本演示</option><option value="qwen">Qwen · 本地模型</option></select></label>
+            <label>实验模式<select id="experiment-mode">
+              <option value="protocol_vector_memory">协议 + 向量 + 跨组共享</option>
+              <option value="protocol_vector_group_memory">协议 + 向量 + 仅同组记忆</option>
+              <option value="protocol_vector">协议 + 向量，无记忆</option>
+              <option value="protocol">结构化协议，无向量/记忆</option>
+              <option value="text">纯文本协作，无向量/记忆</option>
+            </select></label>
+            <label>每轮步数预算<input id="max-steps" type="number" min="1" max="100" value="20" required></label>
+            <label>生成设备<input id="generation-device" value="cuda:0" required></label>
+            <label>向量设备<input id="embedding-device" value="cpu" required></label>
+          </div>
+          <div class="experiment-actions"><p class="scope-note">自建可执行项目；V2 包含 8 个代码模块、SQLite、持久检查点和多请求场景。Fixture 使用参考配方和固定向量，V1 的 Qwen 成功率不代表 V2。</p>
+            <button class="primary-button" id="start-experiment" type="submit" disabled>连接引擎…</button>
+            <button class="ghost-button" id="reconnect" type="button" hidden>重新连接运行</button></div>
+          <p class="inline-error" id="experiment-error" role="alert"></p>
+        </form>
+      </section>
+      <section class="sequence-summary" aria-label="当前实验汇总">
+        <div><span class="metric-label">VERIFIED TASKS</span><strong id="passed-total">0 / 10</strong></div>
+        <div><span class="metric-label">CROSS-GROUP REUSE</span><strong id="reuse-total">0</strong></div>
+        <div><span class="metric-label">TOTAL TRANSFER</span><strong id="transfer-total">0 B</strong></div>
+        <div><span class="metric-label">MODEL CALLS</span><strong id="calls-total">0</strong></div>
+      </section>
+      <div class="devops-grid">
+        <section class="panel sequence-panel" aria-labelledby="sequence-heading">
+          <p class="section-kicker">02 / TASK DEPENDENCIES</p><h2 id="sequence-heading">关联任务序列</h2>
+          <p class="run-status" id="run-status" aria-live="polite">等待启动。每次运行创建独立环境和记忆。</p>
+          <progress id="sequence-progress" max="10" value="0" aria-label="已结束任务数"></progress>
+          <div class="lane-headings"><span>B / 运维处置</span><span>A / 研发修复</span></div>
+          <div id="sequence-tasks" class="sequence-tasks"><p class="muted skeleton">正在读取任务…</p></div>
+          <p class="scope-note">B1 → A1 → B2 → A2 → … → B5 → A5<br>失败会阻塞依赖任务；点击已结束任务查看证据。</p>
+        </section>
+        <section class="panel inspector" aria-labelledby="inspector-heading" aria-busy="false" id="inspector">
+          <div class="inspector-heading"><div><p class="section-kicker">03 / EXECUTION EVIDENCE</p><h2 id="inspector-heading">选择一轮任务</h2></div><span id="task-outcome" class="outcome-label">EMPTY</span></div>
+          <p id="task-summary" class="muted">任务运行后，可以检查实际工具结果、独立验收、跨组记忆引用和候选/部署代码。</p>
+          <dl class="task-facts" id="task-facts"></dl>
+          <label class="source-picker" id="source-picker" hidden>查看项目文件<select id="source-file"></select></label>
+          <details open><summary>工具观察与独立验收</summary><pre id="task-evidence">等待任务完成…</pre></details>
+          <details><summary>记忆来源与拒用记录</summary><pre id="task-memory">暂无记忆记录</pre></details>
+          <details><summary>候选代码</summary><pre id="candidate-source">暂无代码快照</pre></details>
+          <details><summary>部署代码</summary><pre id="deployed-source">暂无代码快照</pre></details>
+          <details><summary>Agent 通信记录</summary><pre id="task-trace">暂无通信记录</pre></details>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="/assets/devops.js"></script>
+</body>
+</html>

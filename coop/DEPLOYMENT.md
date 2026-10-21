@@ -49,6 +49,13 @@ python -m tools.serve_ui --backend fixture --host 127.0.0.1 --port 8765
 python -m tools.serve_ui --backend qwen --device cuda:1 --embedding-device cpu --port 8765
 ```
 
+研发—运维十轮闭环页面位于 `http://127.0.0.1:8765/devops`，支持选择五种通信/记忆模式、
+步数预算和后端设备，并查看逐轮真实工具执行、验收、记忆 ID、代码快照及 trace。
+新序列使用后台 job 和轮询 API；当前成本任务仍为同步请求。
+完整说明见 [`DEVOPS_WORKLOAD.md`](DEVOPS_WORKLOAD.md)。
+当前页面默认选择 V2 多文件有状态项目（8 模块、SQLite、缓存/游标/事务），可切换回旧版；
+新任务、运行命令及验收边界见 [`CATALOG_PROJECT_V2.md`](CATALOG_PROJECT_V2.md)。
+
 页面也可从fixture切换到qwen，此时会加载本地模型，加载完成前请勿重复切换。
 默认只监听loopback，是单用户本机演示，不含登录/鉴权，也不应直接暴露到公网。
 目前HTTP请求在服务器工作线程中串行执行，避免共享模型和生成调用统计并发串扰。
@@ -57,7 +64,7 @@ python -m tools.serve_ui --backend qwen --device cuda:1 --embedding-device cpu -
 
 1. **左栏：预设任务**。显示Orion/Lyra十个有标准标签的任务；切换text/protocol并一键运行。
 2. **中栏：对话窗口**。以用户消息、Agent身份和Summarizer回答呈现；支持输入手动任务。
-   手动任务当前从文本推断Orion/Lyra，并使用固定演示输入组合。
+   手动任务通过实体选择与数值参数显式提供Orion/Lyra输入。
 3. **右栏：赛题指标**。展示四角色状态、协议frame、LLM调用/token、float16状态大小、
    记忆复用、任务内金额/单位/引用一致性检查和要求覆盖状态。
 

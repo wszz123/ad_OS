@@ -9,9 +9,11 @@ from pathlib import Path
 import re
 import threading
 import time
+from urllib.parse import parse_qs, urlsplit
 from uuid import uuid4
 
 from .demo_support import EMBEDDING, QWEN, FixturePlanner, fixture_encode
+from .devops_web import DevOpsJobs
 from .memory import MemoryAdapter
 from .protocol import ProtocolAdapter
 from .text_transport import TextAdapter
@@ -26,6 +28,7 @@ RUNS_LOCK = threading.RLock()
 ENGINE = {}
 ENGINE_LOCK = threading.RLock()
 EXECUTION_LOCK = threading.Lock()
+DEVOPS_JOBS = DevOpsJobs(ROOT / "results" / "devops-web", EXECUTION_LOCK)
 ROLES = [
     {"id": "planner", "label": "Planner", "role": "任务规划"},
     {"id": "retriever", "label": "Retriever", "role": "资料检索"},
@@ -39,7 +42,8 @@ def system_status():
             "model": ENGINE.get("model_path", QWEN) if ENGINE.get("backend") == "qwen" else "规则演示器（非LLM）",
             "embedding": ENGINE.get("embedding_path", EMBEDDING) if ENGINE.get("backend") == "qwen" else "2维主题夹具（非学习向量）",
             "loaded": bool(ENGINE.get("llm")) if ENGINE.get("backend") == "qwen" else True,
-            "last_error": ENGINE.get("error")}
+            "last_error": ENGINE.get("error"), "device": ENGINE.get("device", "cuda:0"),
+            "embedding_device": ENGINE.get("embedding_device", "cpu")}
 
 
 def start_engine(backend="fixture", device="cuda:0", embedding_device="cuda:1",
@@ -239,6 +243,24 @@ class Handler(BaseHTTPRequestHandler):
         return json.loads(self.rfile.read(length))
 
     def do_GET(self):
+        if urlsplit(self.path).path == "/api/devops/tasks":
+            workload = parse_qs(urlsplit(self.path).query).get("workload", ["service"])[0]
+            if workload == "project":
+                from .catalog_project import project_tasks
+                return self._json(200, {"tasks": project_tasks(), "scope": "constructed_catalog_project_v2"})
+            if workload != "service":
+                return self._json(400, {"error": "workload must be service or project"})
+            from .devops_world import tasks
+            return self._json(200, {"tasks": tasks(), "scope": "constructed_catalog_service_v1"})
+        if self.path.startswith("/api/devops/runs/"):
+            parts = self.path.split("/")
+            result = None
+            if len(parts) == 5:
+                result = DEVOPS_JOBS.get(parts[4])
+            elif len(parts) == 7 and parts[5] == "tasks":
+                result = DEVOPS_JOBS.task_detail(parts[4], parts[6])
+            return self._json(200 if result is not None else 404,
+                              result if result is not None else {"error": "sequence or task not found"})
         if self.path == "/api/health":
             return self._json(200, {"ok": True, **system_status()})
         if self.path == "/api/metrics":
@@ -268,6 +290,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(200 if run else 404, run or {"error": "run not found"})
         if self.path == "/" or self.path.startswith("/index.html"):
             return self._static("index.html")
+        if self.path == "/devops" or self.path == "/devops.html":
+            return self._static("devops.html")
         if self.path.startswith("/assets/"):
             name = self.path.removeprefix("/assets/")
             if Path(name).name != name:
@@ -290,12 +314,29 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         try:
             payload = self._body()
+            if not isinstance(payload, dict):
+                raise ValueError("request must be a JSON object")
+            if self.path == "/api/devops/runs":
+                from .devops_graph import QwenDevOps
+                from tools.run_devops_workload import fixture_embedding
+                with ENGINE_LOCK:
+                    backend = ENGINE.get("backend", "fixture")
+                    if backend == "qwen" and ENGINE.get("error"):
+                        raise ValueError(ENGINE["error"])
+                    decision = QwenDevOps(ENGINE["llm"]) if backend == "qwen" else None
+                    encoder = ENGINE["encoder"] if backend == "qwen" else fixture_embedding
+                job = DEVOPS_JOBS.start(mode=payload.get("mode", "protocol_vector_memory"),
+                                        max_steps=payload.get("max_steps", 20), backend=backend,
+                                        decision=decision, encoder=encoder, workload=payload.get("workload", "service"))
+                return self._json(202, job)
             if self.path == "/api/engine":
-                return self._json(200, start_engine(
-                    payload.get("backend", "fixture"), payload.get("device", "cuda:0"),
-                    payload.get("embedding_device", "cuda:1"),
-                    model_path=payload.get("model_path", QWEN),
-                    embedding_path=payload.get("embedding_path", EMBEDDING)))
+                with EXECUTION_LOCK:
+                    status = start_engine(
+                        payload.get("backend", "fixture"), payload.get("device", "cuda:0"),
+                        payload.get("embedding_device", "cpu"),
+                        model_path=payload.get("model_path", QWEN),
+                        embedding_path=payload.get("embedding_path", EMBEDDING))
+                return self._json(200, status)
             if self.path == "/api/run":
                 preset_id = payload.get("task_id")
                 if preset_id:

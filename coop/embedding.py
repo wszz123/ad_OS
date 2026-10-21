@@ -53,7 +53,9 @@ class LocalQwenEmbedding:
             self.model_path, local_files_only=True, padding_side="left"
         )
         kwargs = {"local_files_only": True}
-        if self.dtype is not None and self.device.type != "cpu":
+        if self.device.type == "cpu":
+            kwargs["dtype"] = torch.float32
+        elif self.dtype is not None:
             kwargs["dtype"] = self.dtype
         self._model = AutoModel.from_pretrained(self.model_path, **kwargs)
         self._model.to(self.device)
